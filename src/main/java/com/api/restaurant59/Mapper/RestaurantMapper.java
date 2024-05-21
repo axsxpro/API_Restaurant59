@@ -5,9 +5,11 @@ import com.api.restaurant59.Model.Entity.Restaurant;
 
 public class RestaurantMapper {
 
+
+    //méthode qui convertit une entité Restaurant en un DTO RestaurantDTO
     public static RestaurantDTO mapToRestaurantDTO(Restaurant restaurant) {
 
-         RestaurantDTO restaurantDTO = new RestaurantDTO(
+         RestaurantDTO restaurantDto = new RestaurantDTO(
 
                  restaurant.getIdRestaurant(),
                  restaurant.getName(),
@@ -22,11 +24,12 @@ public class RestaurantMapper {
                  restaurant.getIdAvailability()
          );
 
-        return restaurantDTO;
+        return restaurantDto;
     }
 
 
-    public static Restaurant mapToRestaurant(RestaurantDTO restaurantDTO){
+    //méthode qui convertit un DTO RestaurantDTO en une entité Restaurant
+    public static Restaurant mapToRestaurantEntity(RestaurantDTO restaurantDTO){
 
         Restaurant restaurant = new Restaurant(
 

@@ -9,11 +9,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CityDTO {
+public class DietaryPreferenceDTO {
 
-    private Integer idCity;
-    private String cityName;
-    private String postalCode;
-    private String inseeCode;
+    private Integer idDietaryPreference;
+    private String description;
 }
 

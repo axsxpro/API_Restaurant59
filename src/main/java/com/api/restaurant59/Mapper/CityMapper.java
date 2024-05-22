@@ -3,34 +3,27 @@ package com.api.restaurant59.Mapper;
 import com.api.restaurant59.DTO.CityDTO;
 import com.api.restaurant59.Model.Entity.City;
 
-
 public class CityMapper {
 
-    //méthode qui convertit une entité en un objet DTO
     public static CityDTO mapToCityDTO(City city) {
 
-        CityDTO cityDto = new CityDTO(
-
+        return new CityDTO(
                 city.getIdCity(),
                 city.getCityName(),
+                city.getPostalCode(),
                 city.getInseeCode()
         );
-
-        return cityDto;
     }
 
+    public static City mapToCityEntity(CityDTO cityDto) {
 
-    //méthode qui convertit un objet DTO en une entité
-    public static City mapToCityEntity(CityDTO cityDto){
-
-        City city = new City(
-
+        return new City(
                 cityDto.getIdCity(),
                 cityDto.getCityName(),
+                cityDto.getPostalCode(),
                 cityDto.getInseeCode()
         );
-
-        return city;
     }
 
 }
+

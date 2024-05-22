@@ -19,6 +19,9 @@ public class City {
     @Column(name = "city_name", nullable = false)
     private String cityName;
 
+    @Column(name = "postal_code", nullable = false, length = 5)
+    private String postalCode;
+
     @Column(name = "insee_code", nullable = false, length = 5)
     private String inseeCode;
 

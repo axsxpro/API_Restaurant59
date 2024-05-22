@@ -10,7 +10,7 @@ public interface GenericService<T, ID> {
 
     T getById(ID id);
 
-    T update(T EntityDto);
+    T update(ID id, T EntityDto);
 
     void deleteById(ID id);
 

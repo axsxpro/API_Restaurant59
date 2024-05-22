@@ -1,6 +1,7 @@
 package com.api.restaurant59.Service.EntityꞮmplement;
 
 import com.api.restaurant59.DTO.RestaurantDTO;
+import com.api.restaurant59.Exception.ResourceNotFoundException;
 import com.api.restaurant59.Mapper.RestaurantMapper;
 import com.api.restaurant59.Model.Entity.Restaurant;
 import com.api.restaurant59.Model.Repository.RestaurantRepository;
@@ -39,9 +40,10 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
 
-    public RestaurantDTO update(RestaurantDTO restaurantDto) {
+    public RestaurantDTO update(Integer id, RestaurantDTO restaurantDto) {
 
-        Restaurant existingRestaurant = restaurantRepository.findById(restaurantDto.getIdRestaurant()).get();
+        Restaurant existingRestaurant = restaurantRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Error! ID not found! :("));;
 
         // Mise à jour des propriétés du restaurant
         existingRestaurant.setName(restaurantDto.getName());
@@ -56,6 +58,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         existingRestaurant.setIdAvailability(restaurantDto.getIdAvailability());
 
         Restaurant updatedRestaurant = restaurantRepository.save(existingRestaurant);
+
         return RestaurantMapper.mapToRestaurantDTO(updatedRestaurant);
     }
 

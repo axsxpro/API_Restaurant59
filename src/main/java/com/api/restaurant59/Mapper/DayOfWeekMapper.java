@@ -7,15 +7,15 @@ public class DayOfWeekMapper {
 
     public static DayOfWeekDTO mapToDayOfWeekDTO(DayOfWeek dayOfWeek) {
         return new DayOfWeekDTO(
-                dayOfWeek.getIdDays(),
-                dayOfWeek.getDays()
+                dayOfWeek.getIdDay(),
+                dayOfWeek.getDay()
         );
     }
 
     public static DayOfWeek mapToDayOfWeekEntity(DayOfWeekDTO dayOfWeekDTO) {
         return new DayOfWeek(
-                dayOfWeekDTO.getIdDays(),
-                dayOfWeekDTO.getDays()
+                dayOfWeekDTO.getIdDay(),
+                dayOfWeekDTO.getDay()
         );
     }
 }

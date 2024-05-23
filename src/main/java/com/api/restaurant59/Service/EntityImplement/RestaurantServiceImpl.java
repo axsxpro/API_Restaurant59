@@ -1,4 +1,4 @@
-package com.api.restaurant59.Service.EntityꞮmplement;
+package com.api.restaurant59.Service.EntityImplement;
 
 import com.api.restaurant59.DTO.RestaurantDTO;
 import com.api.restaurant59.Exception.ResourceNotFoundException;
@@ -27,7 +27,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         Restaurant restaurant = RestaurantMapper.mapToRestaurantEntity(restaurantDto);
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
-        // Convert User JPA entity to UserDto
+
         RestaurantDTO savedRestaurantDto = RestaurantMapper.mapToRestaurantDTO(savedRestaurant);
 
         return savedRestaurantDto;
@@ -40,10 +40,19 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
 
+
+    public RestaurantDTO getById(Integer id) {
+        Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(id);
+        return optionalRestaurant.map(RestaurantMapper::mapToRestaurantDTO)
+                .orElseThrow(() -> new ResourceNotFoundException("Error! ID not found! :("));
+    }
+
+
+
     public RestaurantDTO update(Integer id, RestaurantDTO restaurantDto) {
 
         Restaurant existingRestaurant = restaurantRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Error! ID not found! :("));;
+                .orElseThrow(() -> new ResourceNotFoundException("Error! ID not found! :("));
 
         // Mise à jour des propriétés du restaurant
         existingRestaurant.setName(restaurantDto.getName());
@@ -62,11 +71,6 @@ public class RestaurantServiceImpl implements RestaurantService {
         return RestaurantMapper.mapToRestaurantDTO(updatedRestaurant);
     }
 
-
-    public RestaurantDTO getById(Integer id) {
-        Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(id);
-        return optionalRestaurant.map(RestaurantMapper::mapToRestaurantDTO).orElse(null);
-    }
 
 
     public void deleteById(Integer id) {

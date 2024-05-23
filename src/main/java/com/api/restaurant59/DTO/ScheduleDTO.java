@@ -12,9 +12,9 @@ import java.sql.Time;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SchedulesDTO {
+public class ScheduleDTO {
 
-    private Integer idSchedules;
+    private Integer idSchedule;
     private Time morningOpeningTime;
     private Time morningClosingTime;
     private Time eveningOpeningTime;

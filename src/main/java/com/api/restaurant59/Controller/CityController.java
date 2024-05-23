@@ -22,8 +22,10 @@ public class CityController {
     @PostMapping("/create")
     public ResponseEntity<CityDTO> createCity(@RequestBody CityDTO cityDto) {
 
+        // Utilise le service pour créer une nouvelle City à partir du DTO reçu
         CityDTO createdCity = cityService.create(cityDto);
-        return new ResponseEntity<>(createdCity, HttpStatus.CREATED); //code 201
+        // Retourne une réponse HTTP avec le DTO de la City créée et un statut 201 (CREATED)
+        return new ResponseEntity<>(createdCity, HttpStatus.CREATED);
     }
 
 
@@ -32,7 +34,8 @@ public class CityController {
     public ResponseEntity<List<CityDTO>> getAllCities() {
 
         List<CityDTO> cities = cityService.readAll();
-        return ResponseEntity.ok(cities); //code 200
+        // Retourne une réponse HTTP statut 200 (OK).
+        return ResponseEntity.ok(cities);
     }
 
 
@@ -46,11 +49,12 @@ public class CityController {
     }
 
 
-    //mettre à jour par l'id
+    //Méthode HTTP PUT : mettre à jour par l'id
     @PutMapping("/update/{id}")
     public ResponseEntity<CityDTO> updateCity(@PathVariable("id") Integer idCity, @RequestBody CityDTO cityDto) {
 
         CityDTO updatedCity = cityService.update(idCity, cityDto);
+        // Retourne une réponse HTTP avec le DTO de la City mise à jour et un statut 202 (ACCEPTED)
         return new ResponseEntity<>(updatedCity, HttpStatus.ACCEPTED);//code 202
     }
 
@@ -60,6 +64,7 @@ public class CityController {
     public ResponseEntity<Void> deleteCity(@PathVariable("id") Integer idCity) {
 
         cityService.deleteById(idCity);
+        // Retourne une réponse HTTP avec un statut 204 (NO CONTENT) indiquant que la suppression a réussi
         return new ResponseEntity<>(HttpStatus.NO_CONTENT); //code 204
     }
 

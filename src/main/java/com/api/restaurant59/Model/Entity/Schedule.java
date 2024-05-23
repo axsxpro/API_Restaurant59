@@ -10,13 +10,13 @@ import java.sql.Time;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "schedules")
-public class Schedules {
+@Table(name = "schedule")
+public class Schedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_schedules")
-    private Integer idSchedules;
+    @Column(name = "id_schedule")
+    private Integer idSchedule;
 
     @Column(name = "morning_opening_time", nullable = false)
     private Time morningOpeningTime;

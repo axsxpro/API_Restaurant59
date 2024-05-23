@@ -1,4 +1,4 @@
 package com.api.restaurant59.Controller;
 
-public class SchedulesController {
+public class ScheduleController {
 }

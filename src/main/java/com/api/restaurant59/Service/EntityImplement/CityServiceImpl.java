@@ -1,4 +1,4 @@
-package com.api.restaurant59.Service.EntityꞮmplement;
+package com.api.restaurant59.Service.EntityImplement;
 
 import com.api.restaurant59.DTO.CityDTO;
 import com.api.restaurant59.Exception.ResourceNotFoundException;
@@ -52,10 +52,10 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public CityDTO getById(Integer id) {
+
         // Cherche une entité City par son identifiant dans le repository.
         // Optional<City> peut contenir une entité City ou être vide si aucune entité n'a été trouvée avec cet identifiant.
         Optional<City> optionalCity = cityRepository.findById(id);
-
 
         // Si une entité City est trouvée, elle est convertie en CityDTO par le CityMapper.
         // Sinon, une exception ResourceNotFoundException est lancée avec un message d'erreur.
@@ -68,6 +68,7 @@ public class CityServiceImpl implements CityService {
     @Override
     public CityDTO update(Integer id, CityDTO updatedCityDto) {
 
+        // Cherche une entité par son identifiant
         City city = cityRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Error! ID not found! :("));
 
@@ -76,8 +77,10 @@ public class CityServiceImpl implements CityService {
         city.setPostalCode(updatedCityDto.getPostalCode());
         city.setInseeCode(updatedCityDto.getInseeCode());
 
+        // Sauvegarde l'entité mise à jour
         City updatedCity = cityRepository.save(city);
 
+        // Mappe l'entité mise à jour en DTO et la retourne
         return CityMapper.mapToCityDTO(updatedCity);
     }
 
@@ -85,6 +88,8 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public void deleteById(Integer id) {
+
+        // Supprime l'entité par son identifiant.
         cityRepository.deleteById(id);
     }
 

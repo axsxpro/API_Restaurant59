@@ -13,9 +13,9 @@ public class DayOfWeek {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_days")
-    private Integer idDays;
+    @Column(name = "id_day")
+    private Integer idDay;
 
-    @Column(name = "days", nullable = false)
-    private String days;
+    @Column(name = "day", nullable = false)
+    private String day;
 }

@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DayOfWeekDTO {
 
-    private Integer idDays;
-    private String days;
+    private Integer idDay;
+    private String day;
 
 }

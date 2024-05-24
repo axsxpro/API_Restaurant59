@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,5 +17,7 @@ public class CityDTO {
     private String cityName;
     private String postalCode;
     private String inseeCode;
+
+
 }
 

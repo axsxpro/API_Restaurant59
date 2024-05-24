@@ -3,6 +3,9 @@ package com.api.restaurant59.Model.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,5 +21,8 @@ public class MichelinCategory {
 
     @Column(name = "category_name", nullable = false)
     private String categoryName;
+
+    @OneToMany(mappedBy = "idMichelinCategory")
+    private Set<Restaurant> restaurants = new HashSet<>();
 
 }

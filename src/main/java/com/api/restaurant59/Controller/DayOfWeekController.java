@@ -18,6 +18,7 @@ public class DayOfWeekController {
 
 
     // Créer une nouvelle instance d'une entité DayOfWeek
+    // @RequestBody : indiquer que le corps de la requête HTTP doit être converti en un objet de type DTO
     @PostMapping("/create")
     public ResponseEntity<DayOfWeekDTO> createDayOfWeek(@RequestBody DayOfWeekDTO dayOfWeekDto) {
 

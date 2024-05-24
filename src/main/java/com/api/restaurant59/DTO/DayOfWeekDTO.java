@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,5 +15,6 @@ public class DayOfWeekDTO {
 
     private Integer idDay;
     private String day;
+    private Set<ScheduleDTO> scheduleDTOS;
 
 }

@@ -3,6 +3,9 @@ package com.api.restaurant59.Model.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+import java.util.HashSet;
+
 
 @Getter
 @Setter
@@ -11,6 +14,7 @@ import lombok.*;
 @Entity
 @Table(name = "restaurant")
 public class Restaurant {
+
 
     @Id
     //Configure la clé primaire pour être auto-générée par la base de données.
@@ -50,5 +54,45 @@ public class Restaurant {
     @ManyToOne
     @JoinColumn(name = "id_availability", nullable = false)
     private Availability idAvailability;
+
+
+    //relation avec restaurant_type
+    @ManyToMany
+    @JoinTable(
+            name = "restaurant_types",
+            joinColumns = @JoinColumn(name = "id_restaurant"),
+            inverseJoinColumns = @JoinColumn(name = "id_type")
+    )
+    private Set<RestaurantType> restaurantTypes = new HashSet<>();
+
+
+    //relation avec dietary_preference
+    @ManyToMany
+    @JoinTable(
+            name = "restaurant_dietary",
+            joinColumns = @JoinColumn(name = "id_restaurant"),
+            inverseJoinColumns = @JoinColumn(name = "id_dietary_preference")
+    )
+    private Set<DietaryPreference> dietaryPreferences = new HashSet<>();
+
+
+    //relation avec culinary_origin
+    @ManyToMany
+    @JoinTable(
+            name = "restaurant_origin",
+            joinColumns = @JoinColumn(name = "id_restaurant"),
+            inverseJoinColumns = @JoinColumn(name = "id_culinary_origin")
+    )
+    private Set<CulinaryOrigin> culinaryOrigins = new HashSet<>();
+
+
+    //relation avec culinary_speciality
+    @ManyToMany
+    @JoinTable(
+            name = "restaurant_speciality",
+            joinColumns = @JoinColumn(name = "id_restaurant"),
+            inverseJoinColumns = @JoinColumn(name = "id_speciality")
+    )
+    private Set<CulinarySpeciality> culinarySpecialities = new HashSet<>();
 
 }

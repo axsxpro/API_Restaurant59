@@ -3,7 +3,9 @@ package com.api.restaurant59.Service.EntityImplement;
 import com.api.restaurant59.DTO.DayOfWeekDTO;
 import com.api.restaurant59.Exception.ResourceNotFoundException;
 import com.api.restaurant59.Mapper.DayOfWeekMapper;
+import com.api.restaurant59.Mapper.ScheduleMapper;
 import com.api.restaurant59.Model.Entity.DayOfWeek;
+import com.api.restaurant59.Model.Entity.Schedule;
 import com.api.restaurant59.Model.Repository.DayOfWeekRepository;
 import com.api.restaurant59.Service.EntityService.DayOfWeekService;
 import lombok.AllArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,8 +25,18 @@ public class DayOfWeekServiceImpl implements DayOfWeekService {
     // HTTP POST
     @Override
     public DayOfWeekDTO create(DayOfWeekDTO dayOfWeekDto) {
+
         // Mapping du DTO en entité
         DayOfWeek dayOfWeek = DayOfWeekMapper.mapToDayOfWeekEntity(dayOfWeekDto);
+
+        // Si des schedules présents dans le DTO, mappe-les en entités
+        if (dayOfWeekDto.getScheduleDTOS() != null && !dayOfWeekDto.getScheduleDTOS().isEmpty()) {
+            Set<Schedule> schedules = dayOfWeekDto.getScheduleDTOS().stream()
+                    .map(ScheduleMapper::mapToScheduleEntity)
+                    .collect(Collectors.toSet());
+            dayOfWeek.setSchedules(schedules);
+        }
+
         // Sauvegarde de l'entité dans le repository
         DayOfWeek savedDayOfWeek = dayOfWeekRepository.save(dayOfWeek);
 
@@ -35,6 +48,7 @@ public class DayOfWeekServiceImpl implements DayOfWeekService {
     // HTTP GET
     @Override
     public List<DayOfWeekDTO> readAll() {
+
         // Récupère toutes les entités du repository
         List<DayOfWeek> dayOfWeeks = dayOfWeekRepository.findAll();
         // Mappe chaque entité en DTO et retourne la liste des DTO
@@ -45,8 +59,10 @@ public class DayOfWeekServiceImpl implements DayOfWeekService {
     // HTTP GET
     @Override
     public DayOfWeekDTO getById(Integer id) {
+
         // Cherche une entité DayOfWeek par son identifiant dans le repository
         Optional<DayOfWeek> optionalDayOfWeek = dayOfWeekRepository.findById(id);
+
         // Si une entité DayOfWeek est trouvée, elle est convertie en DayOfWeekDTO par le DayOfWeekMapper
         // Sinon, une exception ResourceNotFoundException est lancée avec un message d'erreur
         return optionalDayOfWeek.map(DayOfWeekMapper::mapToDayOfWeekDTO)
@@ -57,6 +73,7 @@ public class DayOfWeekServiceImpl implements DayOfWeekService {
     // HTTP PUT
     @Override
     public DayOfWeekDTO update(Integer id, DayOfWeekDTO updatedDayOfWeekDto) {
+
         // Cherche une entité par son identifiant
         DayOfWeek dayOfWeek = dayOfWeekRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Day of Week not found with ID: " + id));
@@ -75,6 +92,7 @@ public class DayOfWeekServiceImpl implements DayOfWeekService {
     // HTTP DELETE
     @Override
     public void deleteById(Integer id) {
+
         // Supprime l'entité par son identifiant
         dayOfWeekRepository.deleteById(id);
     }

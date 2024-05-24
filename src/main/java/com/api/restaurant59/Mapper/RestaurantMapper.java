@@ -2,52 +2,64 @@ package com.api.restaurant59.Mapper;
 
 import com.api.restaurant59.DTO.RestaurantDTO;
 import com.api.restaurant59.Model.Entity.Restaurant;
+import com.api.restaurant59.Model.Entity.RestaurantType;
+
+import java.util.stream.Collectors;
 
 public class RestaurantMapper {
 
 
-    //méthode qui convertit une entité Restaurant en un DTO RestaurantDTO
+    // Méthode pour mapper une entité Restaurant vers un DTO RestaurantDTO
     public static RestaurantDTO mapToRestaurantDTO(Restaurant restaurant) {
 
-         RestaurantDTO restaurantDto = new RestaurantDTO(
+        // Crée un nouveau RestaurantDTO avec les attributs de l'entité Restaurant
+        return new RestaurantDTO(
 
-                 restaurant.getIdRestaurant(),
-                 restaurant.getName(),
-                 restaurant.getAddress(),
-                 restaurant.getAdditionalAddress(),
-                 restaurant.getPhone(),
-                 restaurant.getEmail(),
-                 restaurant.getWebsite(),
-                 restaurant.getSiren(),
-                 restaurant.getIdCity(),
-                 restaurant.getIdMichelinCategory(),
-                 restaurant.getIdAvailability()
-         );
+                restaurant.getIdRestaurant(),
+                restaurant.getName(),
+                restaurant.getAddress(),
+                restaurant.getAdditionalAddress(),
+                restaurant.getPhone(),
+                restaurant.getEmail(),
+                restaurant.getWebsite(),
+                restaurant.getSiren(),
 
-        return restaurantDto;
+                restaurant.getIdCity(),
+                restaurant.getIdMichelinCategory(),
+                restaurant.getIdAvailability(),
+
+                // Utilise la collection directement sans conversion
+                restaurant.getRestaurantTypes(),
+                restaurant.getDietaryPreferences(),
+                restaurant.getCulinaryOrigins(),
+                restaurant.getCulinarySpecialities()
+        );
     }
 
 
-    //méthode qui convertit un DTO RestaurantDTO en une entité Restaurant
-    public static Restaurant mapToRestaurantEntity(RestaurantDTO restaurantDTO){
+    // Méthode pour mapper un DTO RestaurantDTO vers une entité Restaurant
+    public static Restaurant mapToRestaurantEntity(RestaurantDTO restaurantDTO) {
 
-        Restaurant restaurant = new Restaurant(
+        // Crée une nouvelle entité Restaurant avec les attributs du DTO RestaurantDTO
+        Restaurant restaurant = new Restaurant();
 
-                restaurantDTO.getIdRestaurant(),
-                restaurantDTO.getName(),
-                restaurantDTO.getAddress(),
-                restaurantDTO.getAdditionalAddress(),
-                restaurantDTO.getPhone(),
-                restaurantDTO.getEmail(),
-                restaurantDTO.getWebsite(),
-                restaurantDTO.getSiren(),
-                restaurantDTO.getIdCity(),
-                restaurantDTO.getIdMichelinCategory(),
-                restaurantDTO.getIdAvailability()
-        );
+
+        restaurant.setIdRestaurant(restaurantDTO.getIdRestaurant());
+        restaurant.setName(restaurantDTO.getName());
+        restaurant.setAddress(restaurantDTO.getAddress());
+        restaurant.setAdditionalAddress(restaurantDTO.getAdditionalAddress());
+        restaurant.setPhone(restaurantDTO.getPhone());
+        restaurant.setEmail(restaurantDTO.getEmail());
+        restaurant.setWebsite(restaurantDTO.getWebsite());
+        restaurant.setSiren(restaurantDTO.getSiren());
+
+        //attributs/relation
+        restaurant.setIdCity(restaurantDTO.getIdCity());
+        restaurant.setIdMichelinCategory(restaurantDTO.getIdMichelinCategory());
+        restaurant.setIdAvailability(restaurantDTO.getIdAvailability());
 
         return restaurant;
     }
 
-
 }
+

@@ -3,27 +3,39 @@ package com.api.restaurant59.Mapper;
 import com.api.restaurant59.DTO.ScheduleDTO;
 import com.api.restaurant59.Model.Entity.Schedule;
 
+import java.util.stream.Collectors;
+
 public class ScheduleMapper {
 
-    public static ScheduleDTO mapToSchedulesDTO(Schedule schedule) {
+    // convertir une entité Schedule en un DTO ScheduleDTO
+    public static ScheduleDTO mapToScheduleDTO(Schedule schedule) {
+
+        //creation d'une entité scheduleDTO
         return new ScheduleDTO(
 
-                schedule.getIdSchedule(),
-                schedule.getMorningOpeningTime(),
-                schedule.getMorningClosingTime(),
-                schedule.getEveningOpeningTime(),
-                schedule.getEveningClosingTime()
+                //récupération des informations de l'entité
+                schedule.getIdSchedule(), // ID de l'horaire
+                schedule.getMorningOpeningTime(), // Heure d'ouverture le matin
+                schedule.getMorningClosingTime(), // Heure de fermeture le matin
+                schedule.getEveningOpeningTime(), // Heure d'ouverture le soir
+                schedule.getEveningClosingTime()// Heure de fermeture le soir
         );
     }
 
-    public static Schedule mapToSchedulesEntity(ScheduleDTO scheduleDTO) {
-        return new Schedule(
+    // convertir un DTO ScheduleDTO en une entité Schedule
+    public static Schedule mapToScheduleEntity(ScheduleDTO scheduleDTO) {
 
-                scheduleDTO.getIdSchedule(),
-                scheduleDTO.getMorningOpeningTime(),
-                scheduleDTO.getMorningClosingTime(),
-                scheduleDTO.getEveningOpeningTime(),
-                scheduleDTO.getEveningClosingTime()
-        );
+        // Crée une nouvelle entité Schedule
+        Schedule schedule = new Schedule();
+
+        schedule.setIdSchedule(scheduleDTO.getIdSchedule()); // Définit l'ID de l'horaire
+        schedule.setMorningOpeningTime(scheduleDTO.getMorningOpeningTime()); // Définit l'heure d'ouverture le matin
+        schedule.setMorningClosingTime(scheduleDTO.getMorningClosingTime()); // Définit l'heure de fermeture le matin
+        schedule.setEveningOpeningTime(scheduleDTO.getEveningOpeningTime()); // Définit l'heure d'ouverture le soir
+        schedule.setEveningClosingTime(scheduleDTO.getEveningClosingTime()); // Définit l'heure de fermeture le soir
+
+        return schedule; // Retourne l'entité Schedule
     }
+
 }
+

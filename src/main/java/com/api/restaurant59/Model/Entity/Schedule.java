@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Time;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -18,7 +20,7 @@ public class Schedule {
     @Column(name = "id_schedule")
     private Integer idSchedule;
 
-    @Column(name = "morning_opening_time", nullable = false)
+    @Column(name = "morning_opening_time")
     private Time morningOpeningTime;
 
     @Column(name = "morning_closing_time")
@@ -27,6 +29,10 @@ public class Schedule {
     @Column(name = "evening_opening_time")
     private Time eveningOpeningTime;
 
-    @Column(name = "evening_closing_time", nullable = false)
+    @Column(name = "evening_closing_time")
     private Time eveningClosingTime;
+
+    @ManyToMany(mappedBy = "schedules")
+    private Set<DayOfWeek> days = new HashSet<>();
+
 }

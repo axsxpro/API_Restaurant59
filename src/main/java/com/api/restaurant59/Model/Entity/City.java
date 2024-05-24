@@ -3,6 +3,9 @@ package com.api.restaurant59.Model.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,5 +27,8 @@ public class City {
 
     @Column(name = "insee_code", nullable = false, length = 5)
     private String inseeCode;
+
+    @OneToMany(mappedBy = "idCity")
+    private Set<Restaurant> restaurants = new HashSet<>();
 
 }

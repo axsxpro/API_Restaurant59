@@ -3,6 +3,9 @@ package com.api.restaurant59.Model.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,4 +21,7 @@ public class CulinarySpeciality {
 
     @Column(name = "description")
     private String description;
+
+    @ManyToMany(mappedBy = "culinarySpecialities")
+    private Set<Restaurant> restaurants = new HashSet<>();
 }

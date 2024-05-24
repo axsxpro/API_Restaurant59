@@ -19,6 +19,7 @@ public class CityController {
 
 
     //créer une nouvelle instance d'une entité
+    // @RequestBody : indiquer que le corps de la requête HTTP doit être converti en un objet de type CityDTO
     @PostMapping("/create")
     public ResponseEntity<CityDTO> createCity(@RequestBody CityDTO cityDto) {
 

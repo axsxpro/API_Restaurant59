@@ -18,22 +18,21 @@ public class DayOfWeekMapper {
         // Crée un nouveau DTO DayOfWeekDTO
         DayOfWeekDTO dayOfWeekDto = new DayOfWeekDTO();
 
-
         // Affecte l'ID de l'Availability à l'ID du DTO
         dayOfWeekDto.setIdDay(dayOfWeek.getIdDay());
         dayOfWeekDto.setDay(dayOfWeek.getDay());
 
 
+        // Si dayOfWeekDTO contient des schedules
         if (dayOfWeek.getSchedules() != null && !dayOfWeek.getSchedules().isEmpty()) {
 
-            //
-            // set : ensemble d'éléments uniques
+            // creation d'une collection pour récupérer les schedules sous forme de DTO, ensemble d'éléments uniques
             Set<ScheduleDTO> fluxSchedules = dayOfWeek.getSchedules().stream()
                     .map(ScheduleMapper::mapToScheduleDTO) // Utilise le mapper ScheduleMapper pour mapper chaque Schedule à un ScheduleDTO
                     .collect(Collectors.toSet()); // Collecte les ScheduleDTOs dans un ensemble
 
-            // Affecte les schedules au DTO
-            dayOfWeekDto.setScheduleDTOS(fluxSchedules);
+            // Affecter la collection de schedules au DTO
+            dayOfWeekDto.setSchedules(fluxSchedules);
 
         } else {
 
@@ -56,19 +55,20 @@ public class DayOfWeekMapper {
         dayOfWeek.setIdDay(dayOfWeekDTO.getIdDay());
         dayOfWeek.setDay(dayOfWeekDTO.getDay());
 
+        // Si dayOfWeekDTO contient des schdules
+        if (dayOfWeekDTO.getSchedules() != null && !dayOfWeekDTO.getSchedules().isEmpty()) {
 
-        if (dayOfWeekDTO.getScheduleDTOS() != null && !dayOfWeekDTO.getScheduleDTOS().isEmpty()) {
-
-            Set<Schedule> fluxSchedules = dayOfWeekDTO.getScheduleDTOS().stream()
+            // creation d'une collection pour récupérer les schedules sous forme d'entité, ensemble d'éléments uniques
+            Set<Schedule> fluxSchedules = dayOfWeekDTO.getSchedules().stream()
                     .map(ScheduleMapper::mapToScheduleEntity)
                     .collect(Collectors.toSet());
 
-            // Affecte les jours à l'entité Availability
+            // Affecte les jours à l'entité dayOfWeek
             dayOfWeek.setSchedules(fluxSchedules);
 
         } else {
 
-            // Si aucun jour n'est associé dans le DTO, initialise un ensemble vide de jours
+            // Si aucun jour n'est associé dans le DTO, initialise un ensemble vide de schedule
             dayOfWeek.setSchedules(new HashSet<>());
         }
 

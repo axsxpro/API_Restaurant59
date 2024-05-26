@@ -1,5 +1,6 @@
 package com.api.restaurant59.DTO;
 
+import com.api.restaurant59.Model.Entity.DayOfWeek;
 import com.api.restaurant59.Model.Entity.Schedule;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,6 +16,6 @@ import java.util.Set;
 public class AvailabilityDTO {
 
     private Integer idAvailability;
-    private Set<DayOfWeekDTO> dayOfWeekDTOS;
+    private Set<DayOfWeekDTO> daysOfWeek;
 }
 

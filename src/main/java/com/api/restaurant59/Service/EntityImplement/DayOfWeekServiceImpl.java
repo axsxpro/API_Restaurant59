@@ -29,14 +29,6 @@ public class DayOfWeekServiceImpl implements DayOfWeekService {
         // Mapping du DTO en entité
         DayOfWeek dayOfWeek = DayOfWeekMapper.mapToDayOfWeekEntity(dayOfWeekDto);
 
-        // Si des schedules présents dans le DTO, mappe-les en entités
-        if (dayOfWeekDto.getScheduleDTOS() != null && !dayOfWeekDto.getScheduleDTOS().isEmpty()) {
-            Set<Schedule> schedules = dayOfWeekDto.getScheduleDTOS().stream()
-                    .map(ScheduleMapper::mapToScheduleEntity)
-                    .collect(Collectors.toSet());
-            dayOfWeek.setSchedules(schedules);
-        }
-
         // Sauvegarde de l'entité dans le repository
         DayOfWeek savedDayOfWeek = dayOfWeekRepository.save(dayOfWeek);
 

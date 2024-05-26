@@ -21,17 +21,15 @@ public class AvailabilityMapper {
         // Affecte l'ID de l'Availability à l'ID du DTO
         availabilityDTO.setIdAvailability(availability.getIdAvailability());
 
-
         if (availability.getDays() != null && !availability.getDays().isEmpty()) {
 
-            // Récupère les jours associés à l'entité Availability
-            // set : ensemble d'éléments uniques
+            // creation d'une collection pour récupérer les availabilities sous forme de DTO, ensemble d'éléments uniques
             Set<DayOfWeekDTO> fluxDayOfWeek = availability.getDays().stream()
-                    .map(DayOfWeekMapper::mapToDayOfWeekDTO) // Utilise le mapper ScheduleMapper pour mapper chaque Schedule à un ScheduleDTO
-                    .collect(Collectors.toSet()); // Collecte les ScheduleDTOs dans un ensemble
+                    .map(DayOfWeekMapper::mapToDayOfWeekDTO) // Utilise le mapper DayOfWeekMapper pour mapper chaque jour à un DTO
+                    .collect(Collectors.toSet()); // Collecte les jours dans un ensemble
 
-            // Affecte les jours au DTO
-            availabilityDTO.setDayOfWeekDTOS(fluxDayOfWeek);
+            // Affecte l'ensemble des jours au DTO
+            availabilityDTO.setDaysOfWeek(fluxDayOfWeek);
 
         } else {
             // Si aucun jour n'est fourni dans le DTO, initialise un ensemble vide de jours
@@ -54,16 +52,18 @@ public class AvailabilityMapper {
         availability.setIdAvailability(availabilityDTO.getIdAvailability());
 
         // Vérifie si des jours sont associés à l'entité AvailabilityDTO
-        if (availabilityDTO.getDayOfWeekDTOS() != null && !availabilityDTO.getDayOfWeekDTOS().isEmpty()) {
+        if (availabilityDTO.getDaysOfWeek() != null && !availabilityDTO.getDaysOfWeek().isEmpty()) {
 
-            // Récupère les jours associés à l'entité AvailabilityDTO
-            Set<DayOfWeek> daysOfWeek = availabilityDTO.getDayOfWeekDTOS().stream()
+            // creation d'une collection pour récupérer les availabilities sous forme d'entité, ensemble d'éléments uniques
+            Set<DayOfWeek> daysOfWeek = availabilityDTO.getDaysOfWeek().stream()
                     .map(DayOfWeekMapper::mapToDayOfWeekEntity)
                     .collect(Collectors.toSet());
 
             // Affecte les jours à l'entité Availability
             availability.setDays(daysOfWeek);
+
         } else {
+
             // Si aucun jour n'est associé dans le DTO, initialise un ensemble vide de jours
             availability.setDays(new HashSet<>());
         }

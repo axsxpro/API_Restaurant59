@@ -16,6 +16,6 @@ import java.util.Set;
 public class AvailabilityDTO {
 
     private Integer idAvailability;
-    private Set<DayOfWeekDTO> daysOfWeek;
+    private Set<ScheduleDTO> schedules;
 }
 

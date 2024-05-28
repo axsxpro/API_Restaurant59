@@ -24,14 +24,14 @@ public class RestaurantDTO {
     private String siren;
 
     //Many To One
-    private City idCity;
-    private MichelinCategory idMichelinCategory;
-    private Availability idAvailability;
+    private CityDTO city;
+    private MichelinCategoryDTO michelinCategory;
+    private AvailabilityDTO availability;
 
     //Many to Many
-    private Set<RestaurantType> restaurantTypes;
-    private Set<DietaryPreference> dietaryPreferences;
-    private Set<CulinaryOrigin> culinaryOrigins;
-    private Set<CulinarySpeciality> culinarySpecialities;
+    private Set<RestaurantTypeDTO> restaurantTypes;
+    private Set<DietaryPreferenceDTO> dietaryPreferences;
+    private Set<CulinaryOriginDTO> culinaryOrigins;
+    private Set<CulinarySpecialityDTO> culinarySpecialities;
 
 }

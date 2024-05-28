@@ -4,7 +4,6 @@ import com.api.restaurant59.DTO.ScheduleDTO;
 import com.api.restaurant59.Exception.ResourceNotFoundException;
 import com.api.restaurant59.Mapper.ScheduleMapper;
 import com.api.restaurant59.Model.Entity.Schedule;
-import com.api.restaurant59.Model.Repository.DayOfWeekRepository;
 import com.api.restaurant59.Model.Repository.ScheduleRepository;
 import com.api.restaurant59.Service.EntityService.ScheduleService;
 import lombok.AllArgsConstructor;
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
 public class ScheduleServiceImpl implements ScheduleService {
 
     private ScheduleRepository scheduleRepository;
-    private DayOfWeekRepository dayOfWeekRepository;
+
 
     @Override
     public ScheduleDTO create(ScheduleDTO scheduleDto) {
@@ -29,6 +28,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // Sauvegarde de l'entité dans le repository
         Schedule savedSchedule = scheduleRepository.save(schedule);
+
         // Mapping de l'entité sauvegardée en DTO
         ScheduleDTO savedScheduleDto = ScheduleMapper.mapToScheduleDTO(savedSchedule);
 

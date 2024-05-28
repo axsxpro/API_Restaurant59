@@ -21,5 +21,6 @@ public class ScheduleDTO {
     private Time morningClosingTime;
     private Time eveningOpeningTime;
     private Time eveningClosingTime;
+    private Set<DayOfWeekDTO> daysOfWeek;
 
 }

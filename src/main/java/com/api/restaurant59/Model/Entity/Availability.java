@@ -19,17 +19,17 @@ public class Availability {
     @Column(name = "id_availability")
     private Integer idAvailability;
 
-    @OneToMany(mappedBy = "idAvailability")
+    @OneToMany(mappedBy = "idAvailability", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<Restaurant> restaurants = new HashSet<>();
 
 
     // Relation ManyToMany avec l'entité Schedule.
-    @ManyToMany
+    @ManyToMany()
     @JoinTable(
-            name = "availability_days",
+            name = "availability_schedules",
             joinColumns = @JoinColumn(name = "id_availability"),
-            inverseJoinColumns = @JoinColumn(name = "id_day")
+            inverseJoinColumns = @JoinColumn(name = "id_schedule")
     )
-    private Set<DayOfWeek> days = new HashSet<>();
+    private Set<Schedule> schedules = new HashSet<>();
 
 }

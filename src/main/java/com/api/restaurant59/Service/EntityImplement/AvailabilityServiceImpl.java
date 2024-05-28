@@ -5,7 +5,6 @@ import com.api.restaurant59.DTO.DayOfWeekDTO;
 import com.api.restaurant59.DTO.ScheduleDTO;
 import com.api.restaurant59.Exception.ResourceNotFoundException;
 import com.api.restaurant59.Mapper.AvailabilityMapper;
-import com.api.restaurant59.Mapper.DayOfWeekMapper;
 import com.api.restaurant59.Model.Entity.Availability;
 
 import com.api.restaurant59.Model.Entity.DayOfWeek;
@@ -32,31 +31,40 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     private DayOfWeekRepository dayOfWeekRepository;
     private ScheduleRepository scheduleRepository;
 
-    
+
     @Override
     public AvailabilityDTO create(AvailabilityDTO availabilityDto) {
+
 
         // Mappe le DTO en entité
         Availability availability = AvailabilityMapper.mapToAvailabilityEntity(availabilityDto);
 
-        // Si des jours sont présents dans le DTO, mappe-les en entités
-        if (availabilityDto.getDaysOfWeek() != null && !availabilityDto.getDaysOfWeek().isEmpty()) {
-            Set<DayOfWeek> dayOfWeeks = availabilityDto.getDaysOfWeek().stream().map(dayOfWeekDTO -> {
-                // Récupère l'entité DayOfWeek existante
-                DayOfWeek dayOfWeek = dayOfWeekRepository.findById(dayOfWeekDTO.getIdDay())
-                        .orElseThrow(() -> new EntityNotFoundException("Day not found with id: " + dayOfWeekDTO.getIdDay()));
+        // Si des jours sont présents dans le DTO, mapper en entités
+        if (availabilityDto.getSchedules() != null && !availabilityDto.getSchedules().isEmpty()) {
 
-                // Récupère et associe les schedules existants
-                if (dayOfWeekDTO.getSchedules() != null && !dayOfWeekDTO.getSchedules().isEmpty()) {
-                    Set<Schedule> schedules = dayOfWeekDTO.getSchedules().stream()
-                            .map(scheduleDTO -> scheduleRepository.findById(scheduleDTO.getIdSchedule())
-                                    .orElseThrow(() -> new EntityNotFoundException("Schedule not found with id: " + scheduleDTO.getIdSchedule())))
+            Set<Schedule> schedules = availabilityDto.getSchedules().stream().map( scheduleDTO -> {
+
+                // Récupère l'entité schedule existante
+                Schedule schedule = scheduleRepository.findById(scheduleDTO.getIdSchedule())
+                                .orElseThrow(() -> new EntityNotFoundException("Schedule not found with id: " + scheduleDTO.getIdSchedule()));
+
+                schedule.setIdSchedule(scheduleDTO.getIdSchedule());
+
+                // Récupère et associe les jours existants
+                if (scheduleDTO.getDaysOfWeek() != null && !scheduleDTO.getDaysOfWeek().isEmpty()) {
+
+                    Set<DayOfWeek> daysOfWeek = scheduleDTO.getDaysOfWeek().stream()
+                            .map(dayOfWeekDTO -> dayOfWeekRepository.findById(dayOfWeekDTO.getIdDay())
+                                    .orElseThrow(() -> new EntityNotFoundException("Day not found with id: " + dayOfWeekDTO.getIdDay())))
                             .collect(Collectors.toSet());
-                    dayOfWeek.setSchedules(schedules);
+
+                    schedule.setDays(daysOfWeek);
                 }
-                return dayOfWeek;
+                return schedule;
+
             }).collect(Collectors.toSet());
-            availability.setDays(dayOfWeeks);
+
+            availability.setSchedules(schedules);
         }
 
         // Sauvegarde l'entité dans le repository
@@ -93,60 +101,60 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
     @Override
     public AvailabilityDTO update(Integer id, AvailabilityDTO updatedAvailabilityDTO) {
-
-
         // Cherche l'entité à mettre à jour par son identifiant
         Availability availability = availabilityRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Availability not found with id: " + id));
 
+        // Si des schedules sont présents dans le DTO
+        if (updatedAvailabilityDTO.getSchedules() != null && !updatedAvailabilityDTO.getSchedules().isEmpty()) {
 
-        // Si des jours sont présents dans le DTO
-        if (updatedAvailabilityDTO.getDaysOfWeek() != null && !updatedAvailabilityDTO.getDaysOfWeek().isEmpty()) {
+            // Création d'une collection pour récupérer les schedules sous forme d'entité
+            Set<Schedule> collectionSchedules = new HashSet<>();
 
-            // creation d'une collection pour récupérer les jours sous forme d'entité
-            Set<DayOfWeek> collectionDaysOfWeek = new HashSet<>();
+            // updatedAvailabilityDTO.getSchedules(): récupération de la collection Schedules (qui contient les scheduleDTO)
+            // pour chaque élément(scheduleDTO) de la collection on récupère un DTO
+            for (ScheduleDTO scheduleDTO : updatedAvailabilityDTO.getSchedules()) {
 
-            // updatedAvailabilityDTO.getDaysOfWeek(): récupération de la collection DaysOfWeeek (qui contient les dayOfWeekDTO)
-            // pour chaque élement(dayOfWeekDTO) de la collection on récupère un DTO
-            for (DayOfWeekDTO dayOfWeekDTO : updatedAvailabilityDTO.getDaysOfWeek()) {
+                // Dans chaque scheduleDTO on recherche par l'id de l'horaire l'entité correspondante qu'on stocke dans la variable schedule
+                Schedule schedule = scheduleRepository.findById(scheduleDTO.getIdSchedule())
+                        .orElseThrow(() -> new EntityNotFoundException("Schedule not found with id: " + scheduleDTO.getIdSchedule()));
 
-                // Dans chaque dayOfWeekDTO on recherche par l'id du jour l'entité correspondante qu'on stocke dans la variable dayOfWeek
-                DayOfWeek dayOfWeek = dayOfWeekRepository.findById(dayOfWeekDTO.getIdDay())
-                        .orElseThrow(() -> new EntityNotFoundException("Day not found with id: " + dayOfWeekDTO.getIdDay()));
+                // 1) Met à jour les données (les horaires) de l'entité Schedule
+                schedule.setIdSchedule(scheduleDTO.getIdSchedule());
+//                schedule.setMorningOpeningTime(scheduleDTO.getMorningOpeningTime());
+//                schedule.setMorningClosingTime(scheduleDTO.getMorningClosingTime());
+//                schedule.setEveningOpeningTime(scheduleDTO.getEveningOpeningTime());
+//                schedule.setEveningClosingTime(scheduleDTO.getEveningClosingTime());
 
-                // 1) Met à jour les données (le jour) de l'entité DayOfWeek
-                dayOfWeek.setDay(dayOfWeekDTO.getDay());
+                // Si scheduleDTO contient des jours de la semaine
+                if (scheduleDTO.getDaysOfWeek() != null && !scheduleDTO.getDaysOfWeek().isEmpty()) {
 
-                // Si dayOfWeekDTO contient des schédules
-                if (dayOfWeekDTO.getSchedules() != null && !dayOfWeekDTO.getSchedules().isEmpty()) {
+                    // Création d'une collection pour récupérer les jours de la semaine sous forme d'entité
+                    Set<DayOfWeek> collectionDaysOfWeek = new HashSet<>();
 
-                    // creation d'une collection pour récupérer les schedules sous forme d'entité
-                    Set<Schedule> collectionSchedules = new HashSet<>();
+                    // scheduleDTO.getDaysOfWeek(): récupération de la collection DaysOfWeek (qui contient les dayOfWeekDTO)
+                    // pour chaque élément(dayOfWeekDTO) de la collection on récupère un DTO
+                    for (DayOfWeekDTO dayOfWeekDTO : scheduleDTO.getDaysOfWeek()) {
 
-                    // dayOfWeekDTO.getSchedules(): récupération de la collection Schedules (qui contient les scheduleDTO)
-                    // pour chaque élement(scheduleDTO) de la collection on récupère un DTO
-                    for (ScheduleDTO scheduleDTO : dayOfWeekDTO.getSchedules()) {
+                        // Dans chaque dayOfWeekDTO on recherche par l'id du jour l'entité correspondante qu'on stocke dans la variable dayOfWeek
+                        DayOfWeek dayOfWeek = dayOfWeekRepository.findById(dayOfWeekDTO.getIdDay())
+                                .orElseThrow(() -> new EntityNotFoundException("Day not found with id: " + dayOfWeekDTO.getIdDay()));
 
-                        // Dans chaque scheduleDTO on recherche par l'id du schedule l'entité correspondante qu'on stocke dans la variable dayOfWeek
-                        Schedule schedule = scheduleRepository.findById(scheduleDTO.getIdSchedule())
-                                .orElseThrow(() -> new EntityNotFoundException("Schedule not found with id: " + scheduleDTO.getIdSchedule()));
-
-                        //ajout des entités schedule dans la collection de schedules
-                        collectionSchedules.add(schedule);
+                        // Ajout des entités DayOfWeek dans la collection de jours de la semaine
+                        collectionDaysOfWeek.add(dayOfWeek);
                     }
 
-                    // 2) Ajoute la collection de schedules à l'entité dayOfWeek
-                    dayOfWeek.setSchedules(collectionSchedules);
+                    // 2) Ajoute la collection de jours de la semaine à l'entité Schedule
+                    schedule.setDays(collectionDaysOfWeek);
                 }
 
-                //ajoute l'entité dayOfWeek dans la collection de dayOfWeek
-                collectionDaysOfWeek.add(dayOfWeek);
+                // Ajoute l'entité Schedule dans la collection de schedules
+                collectionSchedules.add(schedule);
             }
 
-            // Met à jour la collection des jours de la semaine par une nouvelle collection dans l'entité Availability
-            availability.setDays(collectionDaysOfWeek);
+            // Met à jour la collection des horaires par une nouvelle collection dans l'entité Availability
+            availability.setSchedules(collectionSchedules);
         }
-
 
         // Sauvegarde l'entité mise à jour
         Availability updatedAvailability = availabilityRepository.save(availability);

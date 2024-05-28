@@ -15,6 +15,6 @@ public class DayOfWeekDTO {
 
     private Integer idDay;
     private String day;
-    private Set<ScheduleDTO> schedules;
+
 
 }

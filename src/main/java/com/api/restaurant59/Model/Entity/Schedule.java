@@ -33,6 +33,15 @@ public class Schedule {
     private Time eveningClosingTime;
 
     @ManyToMany(mappedBy = "schedules")
+    private Set<Availability> availabilities = new HashSet<>();
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(
+            name = "schedule_day",
+            joinColumns = @JoinColumn(name = "id_schedule"),
+            inverseJoinColumns = @JoinColumn(name = "id_day")
+    )
     private Set<DayOfWeek> days = new HashSet<>();
+
 
 }

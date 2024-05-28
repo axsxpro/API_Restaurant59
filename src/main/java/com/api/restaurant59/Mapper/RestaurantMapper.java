@@ -2,8 +2,9 @@ package com.api.restaurant59.Mapper;
 
 import com.api.restaurant59.DTO.RestaurantDTO;
 import com.api.restaurant59.Model.Entity.Restaurant;
-import com.api.restaurant59.Model.Entity.RestaurantType;
 
+
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 public class RestaurantMapper {
@@ -13,53 +14,117 @@ public class RestaurantMapper {
     public static RestaurantDTO mapToRestaurantDTO(Restaurant restaurant) {
 
         // Crée un nouveau RestaurantDTO avec les attributs de l'entité Restaurant
-        return new RestaurantDTO(
+        RestaurantDTO restaurantDTO = new RestaurantDTO();
 
-                restaurant.getIdRestaurant(),
-                restaurant.getName(),
-                restaurant.getAddress(),
-                restaurant.getAdditionalAddress(),
-                restaurant.getPhone(),
-                restaurant.getEmail(),
-                restaurant.getWebsite(),
-                restaurant.getSiren(),
+        restaurantDTO.setIdRestaurant(restaurant.getIdRestaurant());
+        restaurantDTO.setName(restaurant.getName());
+        restaurantDTO.setAddress(restaurant.getAddress());
+        restaurantDTO.setAdditionalAddress(restaurant.getAdditionalAddress());
+        restaurantDTO.setPhone(restaurant.getPhone());
+        restaurantDTO.setEmail(restaurant.getEmail());
+        restaurantDTO.setWebsite(restaurant.getWebsite());
+        restaurantDTO.setSiren(restaurant.getSiren());
 
-                restaurant.getIdCity(),
-                restaurant.getIdMichelinCategory(),
-                restaurant.getIdAvailability(),
+        // Mappe les entités many to one
+        restaurantDTO.setCity(CityMapper.mapToCityDTO(restaurant.getIdCity()));
+        restaurantDTO.setMichelinCategory(MichelinCategoryMapper.mapToMichelinCategoryDTO(restaurant.getIdMichelinCategory()));
+        restaurantDTO.setAvailability(AvailabilityMapper.mapToAvailabilityDTO(restaurant.getIdAvailability()));
 
-                // Utilise la collection directement sans conversion
-                restaurant.getRestaurantTypes(),
-                restaurant.getDietaryPreferences(),
-                restaurant.getCulinaryOrigins(),
-                restaurant.getCulinarySpecialities()
-        );
+        // Mappe les collections d'entités many to many
+        if (restaurant.getRestaurantTypes() != null && !restaurant.getRestaurantTypes().isEmpty()) {
+            restaurantDTO.setRestaurantTypes(restaurant.getRestaurantTypes().stream()
+                    .map(RestaurantTypeMapper::mapToRestaurantTypeDTO)
+                    .collect(Collectors.toSet()));
+        } else {
+            restaurantDTO.setRestaurantTypes(new HashSet<>());
+        }
+
+        if (restaurant.getDietaryPreferences() != null && !restaurant.getDietaryPreferences().isEmpty()) {
+            restaurantDTO.setDietaryPreferences(restaurant.getDietaryPreferences().stream()
+                    .map(DietaryPreferenceMapper::mapToDietaryPreferenceDTO)
+                    .collect(Collectors.toSet()));
+        } else {
+            restaurantDTO.setDietaryPreferences(new HashSet<>());
+        }
+
+        if (restaurant.getCulinaryOrigins() != null && !restaurant.getCulinaryOrigins().isEmpty()) {
+            restaurantDTO.setCulinaryOrigins(restaurant.getCulinaryOrigins().stream()
+                    .map(CulinaryOriginMapper::mapToCulinaryOriginDTO)
+                    .collect(Collectors.toSet()));
+        } else {
+            restaurantDTO.setCulinaryOrigins(new HashSet<>());
+        }
+
+        if (restaurant.getCulinarySpecialities() != null && !restaurant.getCulinarySpecialities().isEmpty()) {
+            restaurantDTO.setCulinarySpecialities(restaurant.getCulinarySpecialities().stream()
+                    .map(CulinarySpecialityMapper::mapToCulinarySpecialityDTO)
+                    .collect(Collectors.toSet()));
+        } else {
+            restaurantDTO.setCulinarySpecialities(new HashSet<>());
+        }
+
+        return restaurantDTO;
     }
 
 
+
+
     // Méthode pour mapper un DTO RestaurantDTO vers une entité Restaurant
-    public static Restaurant mapToRestaurantEntity(RestaurantDTO restaurantDTO) {
+    public static Restaurant mapToRestaurantEntity(RestaurantDTO restaurantDto) {
 
         // Crée une nouvelle entité Restaurant avec les attributs du DTO RestaurantDTO
         Restaurant restaurant = new Restaurant();
 
+        restaurant.setIdRestaurant(restaurantDto.getIdRestaurant());
+        restaurant.setName(restaurantDto.getName());
+        restaurant.setAddress(restaurantDto.getAddress());
+        restaurant.setAdditionalAddress(restaurantDto.getAdditionalAddress());
+        restaurant.setPhone(restaurantDto.getPhone());
+        restaurant.setEmail(restaurantDto.getEmail());
+        restaurant.setWebsite(restaurantDto.getWebsite());
+        restaurant.setSiren(restaurantDto.getSiren());
 
-        restaurant.setIdRestaurant(restaurantDTO.getIdRestaurant());
-        restaurant.setName(restaurantDTO.getName());
-        restaurant.setAddress(restaurantDTO.getAddress());
-        restaurant.setAdditionalAddress(restaurantDTO.getAdditionalAddress());
-        restaurant.setPhone(restaurantDTO.getPhone());
-        restaurant.setEmail(restaurantDTO.getEmail());
-        restaurant.setWebsite(restaurantDTO.getWebsite());
-        restaurant.setSiren(restaurantDTO.getSiren());
+        // Mappe les entités many to one
+        restaurant.setIdCity(CityMapper.mapToCityEntity(restaurantDto.getCity()));
+        restaurant.setIdMichelinCategory(MichelinCategoryMapper.mapToMichelinCategoryEntity(restaurantDto.getMichelinCategory()));
+        restaurant.setIdAvailability(AvailabilityMapper.mapToAvailabilityEntity(restaurantDto.getAvailability()));
 
-        //attributs/relation
-        restaurant.setIdCity(restaurantDTO.getIdCity());
-        restaurant.setIdMichelinCategory(restaurantDTO.getIdMichelinCategory());
-        restaurant.setIdAvailability(restaurantDTO.getIdAvailability());
+        // Mappe les collections d'entités many to many
+        if (restaurantDto.getRestaurantTypes() != null && !restaurantDto.getRestaurantTypes().isEmpty()) {
+            restaurant.setRestaurantTypes(restaurantDto.getRestaurantTypes().stream()
+                    .map(RestaurantTypeMapper::mapToRestaurantTypeEntity)
+                    .collect(Collectors.toSet()));
+        } else {
+            restaurant.setRestaurantTypes(new HashSet<>());
+        }
+
+        if (restaurantDto.getDietaryPreferences() != null && !restaurantDto.getDietaryPreferences().isEmpty()) {
+            restaurant.setDietaryPreferences(restaurantDto.getDietaryPreferences().stream()
+                    .map(DietaryPreferenceMapper::mapToDietaryPreferenceEntity)
+                    .collect(Collectors.toSet()));
+        } else {
+            restaurant.setDietaryPreferences(new HashSet<>());
+        }
+
+        if (restaurantDto.getCulinaryOrigins() != null && !restaurantDto.getCulinaryOrigins().isEmpty()) {
+            restaurant.setCulinaryOrigins(restaurantDto.getCulinaryOrigins().stream()
+                    .map(CulinaryOriginMapper::mapToCulinaryOriginEntity)
+                    .collect(Collectors.toSet()));
+        } else {
+            restaurant.setCulinaryOrigins(new HashSet<>());
+        }
+
+        if (restaurantDto.getCulinarySpecialities() != null && !restaurantDto.getCulinarySpecialities().isEmpty()) {
+            restaurant.setCulinarySpecialities(restaurantDto.getCulinarySpecialities().stream()
+                    .map(CulinarySpecialityMapper::mapToCulinarySpecialityEntity)
+                    .collect(Collectors.toSet()));
+        } else {
+            restaurant.setCulinarySpecialities(new HashSet<>());
+        }
 
         return restaurant;
     }
+
 
 }
 

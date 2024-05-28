@@ -3,9 +3,7 @@ package com.api.restaurant59.Service.EntityImplement;
 import com.api.restaurant59.DTO.DayOfWeekDTO;
 import com.api.restaurant59.Exception.ResourceNotFoundException;
 import com.api.restaurant59.Mapper.DayOfWeekMapper;
-import com.api.restaurant59.Mapper.ScheduleMapper;
 import com.api.restaurant59.Model.Entity.DayOfWeek;
-import com.api.restaurant59.Model.Entity.Schedule;
 import com.api.restaurant59.Model.Repository.DayOfWeekRepository;
 import com.api.restaurant59.Service.EntityService.DayOfWeekService;
 import lombok.AllArgsConstructor;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service

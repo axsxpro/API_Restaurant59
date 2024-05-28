@@ -203,7 +203,6 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
 
-
     @Override
     public void deleteById(Integer id) {
         // Supprime l'entité par son identifiant

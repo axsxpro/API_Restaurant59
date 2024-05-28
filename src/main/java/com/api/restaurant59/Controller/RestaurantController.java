@@ -2,6 +2,7 @@ package com.api.restaurant59.Controller;
 
 import com.api.restaurant59.DTO.RestaurantDTO;
 import com.api.restaurant59.Service.EntityService.RestaurantService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ public class RestaurantController {
 
     // Créer une nouvelle instance d'une entité Restaurant
     @PostMapping("/create")
+    @Operation(summary = "Create a new restaurant")
     public ResponseEntity<RestaurantDTO> createRestaurant(@RequestBody RestaurantDTO restaurantDto) {
         // Utilise le service pour créer une nouvelle Restaurant à partir du DTO reçu
         RestaurantDTO createdRestaurant = restaurantService.create(restaurantDto);

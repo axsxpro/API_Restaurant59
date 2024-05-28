@@ -2,6 +2,7 @@ package com.api.restaurant59.Controller;
 
 import com.api.restaurant59.DTO.DietaryPreferenceDTO;
 import com.api.restaurant59.Service.EntityService.DietaryPreferenceService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ public class DietaryPreferenceController {
 
     // Créer une nouvelle instance d'une entité DietaryPreference
     @PostMapping("/create")
+    @Operation(summary = "Create new dietary preference")
     public ResponseEntity<DietaryPreferenceDTO> createDietaryPreference(@RequestBody DietaryPreferenceDTO dietaryPreferenceDto) {
 
         // Utilise le service pour créer une nouvelle DietaryPreference à partir du DTO reçu
@@ -31,6 +33,7 @@ public class DietaryPreferenceController {
 
     // Récupérer toutes les données de la table DietaryPreference
     @GetMapping
+    @Operation(summary = "Get all dietary preference")
     public ResponseEntity<List<DietaryPreferenceDTO>> getAllDietaryPreferences() {
 
         List<DietaryPreferenceDTO> dietaryPreferences = dietaryPreferenceService.readAll();
@@ -41,6 +44,7 @@ public class DietaryPreferenceController {
 
     // Récupérer une DietaryPreference par son identifiant
     @GetMapping("/{id}")
+    @Operation(summary = "Get dietary preference by ID")
     public ResponseEntity<DietaryPreferenceDTO> getDietaryPreferenceById(@PathVariable("id") Integer idDietaryPreference) {
 
         DietaryPreferenceDTO dietaryPreference = dietaryPreferenceService.getById(idDietaryPreference);
@@ -51,6 +55,7 @@ public class DietaryPreferenceController {
 
     // Mettre à jour une DietaryPreference par son identifiant
     @PutMapping("/update/{id}")
+    @Operation(summary = "Update dietary preference by ID")
     public ResponseEntity<DietaryPreferenceDTO> updateDietaryPreference(@PathVariable("id") Integer idDietaryPreference, @RequestBody DietaryPreferenceDTO dietaryPreferenceDto) {
 
         DietaryPreferenceDTO updatedDietaryPreference = dietaryPreferenceService.update(idDietaryPreference, dietaryPreferenceDto);
@@ -61,6 +66,7 @@ public class DietaryPreferenceController {
 
     // Supprimer une DietaryPreference par son identifiant
     @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Delete dietary preference by ID")
     public ResponseEntity<Void> deleteDietaryPreference(@PathVariable("id") Integer idDietaryPreference) {
 
         dietaryPreferenceService.deleteById(idDietaryPreference);

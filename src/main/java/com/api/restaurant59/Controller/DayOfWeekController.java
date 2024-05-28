@@ -2,6 +2,7 @@ package com.api.restaurant59.Controller;
 
 import com.api.restaurant59.DTO.DayOfWeekDTO;
 import com.api.restaurant59.Service.EntityService.DayOfWeekService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ public class DayOfWeekController {
     // Créer une nouvelle instance d'une entité DayOfWeek
     // @RequestBody : indiquer que le corps de la requête HTTP doit être converti en un objet de type DTO
     @PostMapping("/create")
+    @Operation(summary = "Create new day of week")
     public ResponseEntity<DayOfWeekDTO> createDayOfWeek(@RequestBody DayOfWeekDTO dayOfWeekDto) {
 
         // Utilise le service pour créer une nouvelle DayOfWeek à partir du DTO reçu
@@ -32,6 +34,7 @@ public class DayOfWeekController {
 
     // Récupérer toutes les données d'une entité DayOfWeek
     @GetMapping
+    @Operation(summary = "Get all days of week")
     public ResponseEntity<List<DayOfWeekDTO>> getAllDayOfWeeks() {
 
         List<DayOfWeekDTO> dayOfWeeks = dayOfWeekService.readAll();
@@ -44,6 +47,7 @@ public class DayOfWeekController {
 
     // Récupérer une DayOfWeek par son identifiant
     @GetMapping("/{id}")
+    @Operation(summary = "Get day of week by ID")
     public ResponseEntity<DayOfWeekDTO> getDayOfWeekById(@PathVariable("id") Integer idDayOfWeek) {
 
         DayOfWeekDTO dayOfWeek = dayOfWeekService.getById(idDayOfWeek);
@@ -56,6 +60,7 @@ public class DayOfWeekController {
 
     // Mettre à jour une DayOfWeek par son identifiant
     @PutMapping("/update/{id}")
+    @Operation(summary = "Update day of week by ID")
     public ResponseEntity<DayOfWeekDTO> updateDayOfWeek(@PathVariable("id") Integer idDayOfWeek, @RequestBody DayOfWeekDTO dayOfWeekDto) {
 
         DayOfWeekDTO updatedDayOfWeek = dayOfWeekService.update(idDayOfWeek, dayOfWeekDto);
@@ -68,6 +73,7 @@ public class DayOfWeekController {
 
     // Supprimer une DayOfWeek par son identifiant
     @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Delete day of week by ID")
     public ResponseEntity<Void> deleteDayOfWeek(@PathVariable("id") Integer idDayOfWeek) {
 
         dayOfWeekService.deleteById(idDayOfWeek);

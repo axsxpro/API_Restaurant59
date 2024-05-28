@@ -31,6 +31,7 @@ public class RestaurantController {
 
     // Récupérer toutes les données d'une entité Restaurant
     @GetMapping
+    @Operation(summary = "Get All restaurant")
     public ResponseEntity<List<RestaurantDTO>> getAllRestaurants() {
         List<RestaurantDTO> restaurants = restaurantService.readAll();
         // Retourne une réponse HTTP statut 200 (OK)
@@ -40,6 +41,7 @@ public class RestaurantController {
 
     // Récupérer une Restaurant par son identifiant
     @GetMapping("/{id}")
+    @Operation(summary = "Get restaurant by ID")
     public ResponseEntity<RestaurantDTO> getRestaurantById(@PathVariable("id") Integer idRestaurant) {
         RestaurantDTO restaurant = restaurantService.getById(idRestaurant);
         // Retourne une réponse HTTP avec le DTO de la Restaurant et un statut 200 (OK)
@@ -49,6 +51,7 @@ public class RestaurantController {
 
     // Mettre à jour une Restaurant par son identifiant
     @PutMapping("/update/{id}")
+    @Operation(summary = "Update restaurant by ID")
     public ResponseEntity<RestaurantDTO> updateRestaurant(@PathVariable("id") Integer idRestaurant, @RequestBody RestaurantDTO restaurantDto) {
         RestaurantDTO updatedRestaurant = restaurantService.update(idRestaurant, restaurantDto);
         // Retourne une réponse HTTP avec le DTO de la Restaurant mise à jour et un statut 202 (ACCEPTED)
@@ -58,6 +61,7 @@ public class RestaurantController {
 
     // Supprimer une Restaurant par son identifiant
     @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Delete restaurant by ID")
     public ResponseEntity<Void> deleteRestaurant(@PathVariable("id") Integer idRestaurant) {
         restaurantService.deleteById(idRestaurant);
         // Retourne une réponse HTTP avec un statut 204 (NO CONTENT) indiquant que la suppression a réussi

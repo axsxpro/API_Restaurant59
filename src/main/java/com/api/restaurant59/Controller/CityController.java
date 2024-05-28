@@ -2,6 +2,7 @@ package com.api.restaurant59.Controller;
 
 import com.api.restaurant59.DTO.CityDTO;
 import com.api.restaurant59.Service.EntityService.CityService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ public class CityController {
     //créer une nouvelle instance d'une entité
     // @RequestBody : indiquer que le corps de la requête HTTP doit être converti en un objet de type CityDTO
     @PostMapping("/create")
+    @Operation(summary = "Create new city")
     public ResponseEntity<CityDTO> createCity(@RequestBody CityDTO cityDto) {
 
         // Utilise le service pour créer une nouvelle City à partir du DTO reçu
@@ -32,6 +34,7 @@ public class CityController {
 
     //récupérer toutes les données d'une entité
     @GetMapping
+    @Operation(summary = "Get all cities")
     public ResponseEntity<List<CityDTO>> getAllCities() {
 
         List<CityDTO> cities = cityService.readAll();
@@ -42,6 +45,7 @@ public class CityController {
 
     //récupérer par l'id
     @GetMapping("/{id}")
+    @Operation(summary = "Get city by ID")
     public ResponseEntity<CityDTO> getCityById(@PathVariable("id") Integer idCity) {
 
         CityDTO city = cityService.getById(idCity);
@@ -52,6 +56,7 @@ public class CityController {
 
     //Méthode HTTP PUT : mettre à jour par l'id
     @PutMapping("/update/{id}")
+    @Operation(summary = "Update city by ID")
     public ResponseEntity<CityDTO> updateCity(@PathVariable("id") Integer idCity, @RequestBody CityDTO cityDto) {
 
         CityDTO updatedCity = cityService.update(idCity, cityDto);
@@ -62,6 +67,7 @@ public class CityController {
 
     //supprimer par l'id
     @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Delete city by ID")
     public ResponseEntity<Void> deleteCity(@PathVariable("id") Integer idCity) {
 
         cityService.deleteById(idCity);

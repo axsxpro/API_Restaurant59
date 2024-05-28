@@ -2,6 +2,7 @@ package com.api.restaurant59.Controller;
 
 import com.api.restaurant59.DTO.CulinaryOriginDTO;
 import com.api.restaurant59.Service.EntityService.CulinaryOriginService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ public class CulinaryOriginController {
     // Créer une nouvelle instance d'une entité CulinaryOrigin
     // @RequestBody : indiquer que le corps de la requête HTTP doit être converti en un objet de type CulinaryOriginDTO
     @PostMapping("/create")
+    @Operation(summary = "Create new culinary origin")
     public ResponseEntity<CulinaryOriginDTO> createCulinaryOrigin(@RequestBody CulinaryOriginDTO culinaryOriginDto) {
 
         // Utilise le service pour créer une nouvelle CulinaryOrigin à partir du DTO reçu
@@ -32,6 +34,7 @@ public class CulinaryOriginController {
 
     // Récupérer toutes les données d'une entité CulinaryOrigin
     @GetMapping
+    @Operation(summary = "Get all culinary origin")
     public ResponseEntity<List<CulinaryOriginDTO>> getAllCulinaryOrigins() {
 
         List<CulinaryOriginDTO> culinaryOrigins = culinaryOriginService.readAll();
@@ -42,6 +45,7 @@ public class CulinaryOriginController {
 
     // Récupérer une CulinaryOrigin par son identifiant
     @GetMapping("/{id}")
+    @Operation(summary = "Get culinary origin by ID")
     public ResponseEntity<CulinaryOriginDTO> getCulinaryOriginById(@PathVariable("id") Integer idCulinaryOrigin) {
 
         CulinaryOriginDTO culinaryOrigin = culinaryOriginService.getById(idCulinaryOrigin);
@@ -52,6 +56,7 @@ public class CulinaryOriginController {
 
     // Mettre à jour une CulinaryOrigin par son identifiant
     @PutMapping("/update/{id}")
+    @Operation(summary = "Update culinary origin by ID")
     public ResponseEntity<CulinaryOriginDTO> updateCulinaryOrigin(@PathVariable("id") Integer idCulinaryOrigin, @RequestBody CulinaryOriginDTO culinaryOriginDto) {
 
         CulinaryOriginDTO updatedCulinaryOrigin = culinaryOriginService.update(idCulinaryOrigin, culinaryOriginDto);
@@ -62,6 +67,7 @@ public class CulinaryOriginController {
 
     // Supprimer une CulinaryOrigin par son identifiant
     @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Delete culinary origin by ID")
     public ResponseEntity<Void> deleteCulinaryOrigin(@PathVariable("id") Integer idCulinaryOrigin) {
 
         culinaryOriginService.deleteById(idCulinaryOrigin);

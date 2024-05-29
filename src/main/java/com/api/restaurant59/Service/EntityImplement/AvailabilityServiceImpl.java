@@ -121,10 +121,6 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
                 // 1) Met à jour les données (les horaires) de l'entité Schedule
                 schedule.setIdSchedule(scheduleDTO.getIdSchedule());
-//                schedule.setMorningOpeningTime(scheduleDTO.getMorningOpeningTime());
-//                schedule.setMorningClosingTime(scheduleDTO.getMorningClosingTime());
-//                schedule.setEveningOpeningTime(scheduleDTO.getEveningOpeningTime());
-//                schedule.setEveningClosingTime(scheduleDTO.getEveningClosingTime());
 
                 // Si scheduleDTO contient des jours de la semaine
                 if (scheduleDTO.getDaysOfWeek() != null && !scheduleDTO.getDaysOfWeek().isEmpty()) {

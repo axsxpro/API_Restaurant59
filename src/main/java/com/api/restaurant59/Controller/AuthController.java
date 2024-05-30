@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/auth")
@@ -43,7 +45,7 @@ public class AuthController {
                     ));
         } catch (BadCredentialsException e) {
 
-            throw new Exception("Incorrect ID or Password: ", e);
+            throw new Exception("Incorrect username or Password: ", e);
         }
 
         // Générer le token JWT
@@ -52,8 +54,8 @@ public class AuthController {
         // si l'user existe, retourne les détails/infos de l'utilisateur pour générer le token
         String jwt = jwtUtil.generateToken(userDetails);
 
-        // Retourner le token JWT
-        return ResponseEntity.ok(jwt);
+        // Retourner le token JWT dans une réponse JSON
+        return ResponseEntity.ok(Map.of("token", jwt));
     }
 
 }

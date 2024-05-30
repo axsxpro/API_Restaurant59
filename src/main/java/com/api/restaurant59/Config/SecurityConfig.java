@@ -17,6 +17,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 
 @Configuration
@@ -47,18 +52,35 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //ne créera pas de session pour les utilisateurs. Aucune information de session n'est stockée côté serveur
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/users").hasRole("ADMIN") // Restreindre l'accès à /api/users pour les administrateurs
-                        .requestMatchers("/api/roles").hasRole("ADMIN") // Restreindre l'accès à /api/roles pour les administrateurs
+                        .requestMatchers("/api/users", "/api/roles").hasRole("ADMIN") // Restreindre l'accès à /api/users et api/roles pour les administrateurs
                         .anyRequest().permitAll()) // Permettre l'accès sans authentification pour tous les autres endpoints
                 .httpBasic(httpBasic -> httpBasic.disable());
+
+
 
         // Ajout du filtre JWT avant le filtre UsernamePasswordAuthenticationFilter
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+
+    // Définir la configuration CORS
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // L'origine de votre application Angular
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
 

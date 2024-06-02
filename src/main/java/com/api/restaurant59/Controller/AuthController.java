@@ -3,7 +3,7 @@ package com.api.restaurant59.Controller;
 
 import com.api.restaurant59.Model.Entity.AuthRequest;
 import com.api.restaurant59.Service.EntityImplement.UserDetailsServiceImpl;
-import com.api.restaurant59.Util.JwtUtil;
+import com.api.restaurant59.Security.JwtUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

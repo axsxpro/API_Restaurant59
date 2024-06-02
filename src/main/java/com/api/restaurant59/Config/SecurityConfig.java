@@ -2,7 +2,7 @@ package com.api.restaurant59.Config;
 
 
 import com.api.restaurant59.Service.EntityImplement.UserDetailsServiceImpl;
-import com.api.restaurant59.Util.JwtFilter;
+import com.api.restaurant59.Security.JwtFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -23,68 +23,59 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity // Active la sécurité web dans l'application.
 @AllArgsConstructor
 public class SecurityConfig {
 
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsServiceImpl;
+    private UserDetailsServiceImpl userDetailsServiceImpl; // Injecte l'implémentation de UserDetailsService.
     @Autowired
-    private JwtFilter jwtFilter;
+    private JwtFilter jwtFilter; // Injecte le filtre JWT.
 
 
-
-    // Configuration de l'authentification avec UserDetailsServiceImpl
+    // Configure l'authentification avec UserDetailsServiceImpl et un PasswordEncoder.
     protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder());
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration authConfig) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //ne créera pas de session pour les utilisateurs. Aucune information de session n'est stockée côté serveur
+                .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource())) // Configure le CORS.
+                .csrf(csrf -> csrf.disable()) // Désactive la protection CSRF.
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // création de session comme stateless.
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/users", "/api/roles").hasRole("ADMIN") // Restreindre l'accès à /api/users et api/roles pour les administrateurs
-                        .anyRequest().permitAll()) // Permettre l'accès sans authentification pour tous les autres endpoints
-                .httpBasic(httpBasic -> httpBasic.disable());
+                        .requestMatchers("/api/users", "/api/roles").hasRole("ADMIN") // Autorise uniquement les administrateurs à accéder à ces endpoints.
+                        .anyRequest().permitAll()) // Permet à tous les autres endpoints d'être accessibles sans authentification.
+                .httpBasic(httpBasic -> httpBasic.disable()); // Désactive l'authentification HTTP Basic.
 
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // Ajoute le filtre JWT avant le filtre UsernamePasswordAuthentication.
 
-
-        // Ajout du filtre JWT avant le filtre UsernamePasswordAuthenticationFilter
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
+        return http.build(); // Construit la chaîne de filtres de sécurité.
     }
 
-
-    // Définir la configuration CORS
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // L'origine de votre application Angular
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // CORS(Cross-Origin Resource Sharing): autorise l'échange de ressources ayant des domaines différents.
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Méthodes HTTP autorisées.
+        configuration.setAllowedHeaders(List.of("*")); // Autorise tous les headers.
+        configuration.setAllowCredentials(true); // Permet l'envoi des cookies d'authentification.
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
+        source.registerCorsConfiguration("/**", configuration); // Applique cette configuration à toutes les requêtes.
+        return source; // Retourne la source de configuration CORS.
     }
 
 
-    // configuration d'un 'PasswordEncoder' pour hacher les mots de passe
+    // PasswordEncoder pour hacher les mots de passe.
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

@@ -1,4 +1,4 @@
-package com.api.restaurant59.Util;
+package com.api.restaurant59.Security;
 
 import com.api.restaurant59.Service.EntityImplement.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;

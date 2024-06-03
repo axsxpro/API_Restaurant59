@@ -4,6 +4,8 @@ import com.api.restaurant59.DTO.CityDTO;
 import com.api.restaurant59.Service.EntityService.CityService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +18,13 @@ import java.util.List;
 @AllArgsConstructor
 public class CityController {
 
+
+    @Autowired
     private CityService cityService;
 
 
     //créer une nouvelle instance d'une entité
-    // @RequestBody : indiquer que le corps de la requête HTTP doit être converti en un objet de type CityDTO
+    //@RequestBody : indiquer que le corps de la requête HTTP doit être converti en un objet de type CityDTO
     @PostMapping("/create")
     @Operation(summary = "Create new city")
     public ResponseEntity<CityDTO> createCity(@RequestBody CityDTO cityDto) {
@@ -39,6 +43,17 @@ public class CityController {
 
         List<CityDTO> cities = cityService.readAll();
         // Retourne une réponse HTTP statut 200 (OK).
+        return ResponseEntity.ok(cities);
+    }
+
+
+    //récupérer toutes les villes avec pagination
+    @GetMapping("/pagination")
+    @Operation(summary = "Get All cities with pagination")
+    public ResponseEntity<Page<CityDTO>> getAllCitiesWithPagination(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+
+        Page<CityDTO> cities = cityService.readAll(page, size);
+
         return ResponseEntity.ok(cities);
     }
 
@@ -74,7 +89,6 @@ public class CityController {
         // Retourne une réponse HTTP avec un statut 204 (NO CONTENT) indiquant que la suppression a réussi
         return new ResponseEntity<>(HttpStatus.NO_CONTENT); //code 204
     }
-
 
 
 }

@@ -9,6 +9,11 @@ import com.api.restaurant59.Model.Repository.RoleRepository;
 import com.api.restaurant59.Model.Repository.UserRepository;
 import com.api.restaurant59.Service.EntityService.UserService;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
@@ -22,6 +27,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    @Autowired
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
@@ -60,6 +66,20 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll().stream()
                 .map(UserMapper::mapToUserDTO)
                 .collect(Collectors.toList());
+    }
+
+
+    //pagination
+    @Override
+    public Page<UserDTO> readAll(int page, int size) {
+
+        // Crée un objet Pageable avec le numéro de page, la taille de la page, et le tri par ID croissant.
+        Pageable pageable = PageRequest.of(page, size, Sort.by("idUser").ascending());
+        // Utilise le repository pour trouver toutes les entités User en fonction de l'objet Pageable.
+        Page<User> userPage = userRepository.findAll(pageable);
+
+        // Mappe chaque entité User de la page à un UserDTO en utilisant le mapper spécifié.
+        return userPage.map(UserMapper::mapToUserDTO);
     }
 
 

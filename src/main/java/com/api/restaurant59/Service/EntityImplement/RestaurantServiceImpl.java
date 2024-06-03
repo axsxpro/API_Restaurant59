@@ -7,6 +7,11 @@ import com.api.restaurant59.Model.Entity.*;
 import com.api.restaurant59.Model.Repository.*;
 import com.api.restaurant59.Service.EntityService.RestaurantService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +23,9 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class RestaurantServiceImpl implements RestaurantService {
 
-
+    @Autowired
     private RestaurantRepository restaurantRepository;
+
     private CityRepository cityRepository;
     private MichelinCategoryRepository michelinCategoryRepository;
     private AvailabilityRepository availabilityRepository;
@@ -104,6 +110,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
 
+    //get All restaurants sans pagination
     @Override
     public List<RestaurantDTO> readAll() {
         // Récupère toutes les entités du repository
@@ -111,6 +118,21 @@ public class RestaurantServiceImpl implements RestaurantService {
         // Mappe chaque entité en DTO et retourne la liste des DTO
         return restaurants.stream().map(RestaurantMapper::mapToRestaurantDTO).collect(Collectors.toList());
     }
+
+
+    //Get all restaurants avec pagination
+    @Override
+    public Page<RestaurantDTO> readAll(int page, int size) {
+
+        // Crée un objet Pageable avec le numéro de page, la taille de la page, et le tri par ID croissant.
+        Pageable pageable = PageRequest.of(page, size, Sort.by("idRestaurant").ascending());
+        // Utilise le repository pour trouver toutes les entités Restaurant en fonction de l'objet Pageable.
+        Page<Restaurant> restaurantPage = restaurantRepository.findAll(pageable);
+
+        // Mappe chaque entité Restaurant de la page à un RestaurantDTO en utilisant le mapper spécifié.
+        return restaurantPage.map(RestaurantMapper::mapToRestaurantDTO);
+    }
+
 
     @Override
     public RestaurantDTO getById(Integer id) {

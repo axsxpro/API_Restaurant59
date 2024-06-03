@@ -4,6 +4,8 @@ import com.api.restaurant59.DTO.ScheduleDTO;
 import com.api.restaurant59.Service.EntityService.ScheduleService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +17,9 @@ import java.util.List;
 @AllArgsConstructor
 public class ScheduleController {
 
+    @Autowired
     private ScheduleService scheduleService;
+
 
     // Créer une nouvelle instance d'une entité Schedule
     @PostMapping("/create")
@@ -27,6 +31,7 @@ public class ScheduleController {
         return new ResponseEntity<>(createdSchedule, HttpStatus.CREATED);
     }
 
+
     // Récupérer toutes les données d'une entité Schedule
     @GetMapping
     @Operation(summary = "Get all schedules")
@@ -35,6 +40,18 @@ public class ScheduleController {
         // Retourne une réponse HTTP statut 200 (OK)
         return ResponseEntity.ok(schedules);
     }
+
+
+    @GetMapping("/pagination")
+    @Operation(summary = "Get All schedules with pagination")
+    public ResponseEntity<Page<ScheduleDTO>> getAllSchedulesWithPagination(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
+
+        Page<ScheduleDTO> schedules = scheduleService.readAll(page, size);
+
+        return ResponseEntity.ok(schedules);
+    }
+
+
 
     // Récupérer une Schedule par son identifiant
     @GetMapping("/{id}")
@@ -45,6 +62,7 @@ public class ScheduleController {
         return new ResponseEntity<>(schedule, HttpStatus.OK);
     }
 
+
     // Mettre à jour une Schedule par son identifiant
     @PutMapping("/update/{id}")
     @Operation(summary = "Update schedule by ID")
@@ -54,6 +72,7 @@ public class ScheduleController {
         return new ResponseEntity<>(updatedSchedule, HttpStatus.ACCEPTED);
     }
 
+
     // Supprimer une Schedule par son identifiant
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "Delete schedule by ID")
@@ -62,5 +81,6 @@ public class ScheduleController {
         // Retourne une réponse HTTP avec un statut 204 (NO CONTENT) indiquant que la suppression a réussi
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 }
 

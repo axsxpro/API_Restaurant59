@@ -7,6 +7,12 @@ import com.api.restaurant59.Model.Entity.Schedule;
 import com.api.restaurant59.Model.Repository.ScheduleRepository;
 import com.api.restaurant59.Service.EntityService.ScheduleService;
 import lombok.AllArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +23,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService {
 
+
+    @Autowired
     private ScheduleRepository scheduleRepository;
 
 
@@ -44,6 +52,21 @@ public class ScheduleServiceImpl implements ScheduleService {
         // Mappe chaque entité en DTO et retourne la liste des DTO
         return schedules.stream().map(ScheduleMapper::mapToScheduleDTO).collect(Collectors.toList());
     }
+
+
+    //pagination
+    @Override
+    public Page<ScheduleDTO> readAll(int page, int size) {
+
+        // Crée un objet Pageable avec le numéro de page, la taille de la page, et le tri par ID croissant.
+        Pageable pageable = PageRequest.of(page, size, Sort.by("idSchedule").ascending());
+        // Utilise le repository pour trouver toutes les entités Schedule en fonction de l'objet Pageable.
+        Page<Schedule> schedulePage = scheduleRepository.findAll(pageable);
+
+        // Mappe chaque entité Schedule de la page à un ScheduleDTO en utilisant le mapper spécifié.
+        return schedulePage.map(ScheduleMapper::mapToScheduleDTO);
+    }
+
 
     @Override
     public ScheduleDTO getById(Integer id) {

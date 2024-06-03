@@ -7,6 +7,11 @@ import com.api.restaurant59.Model.Entity.RestaurantType;
 import com.api.restaurant59.Model.Repository.RestaurantTypeRepository;
 import com.api.restaurant59.Service.EntityService.RestaurantTypeService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +22,9 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class RestaurantTypeServiceImpl implements RestaurantTypeService {
 
+    @Autowired
     private RestaurantTypeRepository restaurantTypeRepository;
+
 
     @Override
     public RestaurantTypeDTO create(RestaurantTypeDTO restaurantTypeDto) {
@@ -39,6 +46,22 @@ public class RestaurantTypeServiceImpl implements RestaurantTypeService {
         return restaurantTypes.stream().map(RestaurantTypeMapper::mapToRestaurantTypeDTO).collect(Collectors.toList());
     }
 
+
+    //pagination
+    @Override
+    public Page<RestaurantTypeDTO> readAll(int page, int size) {
+
+        // Crée un objet Pageable avec le numéro de page et la taille de la page spécifiés.
+        Pageable pageable = PageRequest.of(page, size, Sort.by("idType").ascending());
+
+        // Utilise le repository pour trouver toutes les entités RestaurantType en fonction de l'objet Pageable.
+        Page<RestaurantType> restaurantTypePage = restaurantTypeRepository.findAll(pageable);
+
+        // Mappe chaque entité Schedule de la page à un RestaurantTypeDTO en utilisant le mapper spécifié.
+        return restaurantTypePage.map(RestaurantTypeMapper::mapToRestaurantTypeDTO);
+    }
+
+
     @Override
     public RestaurantTypeDTO getById(Integer id) {
         // Cherche une entité RestaurantType par son identifiant dans le repository
@@ -48,6 +71,7 @@ public class RestaurantTypeServiceImpl implements RestaurantTypeService {
         return optionalRestaurantType.map(RestaurantTypeMapper::mapToRestaurantTypeDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("Restaurant Type not found with ID: " + id));
     }
+
 
     @Override
     public RestaurantTypeDTO update(Integer id, RestaurantTypeDTO updatedRestaurantTypeDto) {
@@ -64,6 +88,7 @@ public class RestaurantTypeServiceImpl implements RestaurantTypeService {
         // Mapping de l'entité mise à jour en DTO et la retourne
         return RestaurantTypeMapper.mapToRestaurantTypeDTO(updatedRestaurantType);
     }
+
 
     @Override
     public void deleteById(Integer id) {

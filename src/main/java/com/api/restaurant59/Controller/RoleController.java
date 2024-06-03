@@ -3,6 +3,7 @@ package com.api.restaurant59.Controller;
 import com.api.restaurant59.DTO.RoleDTO;
 import com.api.restaurant59.Service.EntityService.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,8 @@ import java.util.List;
 @AllArgsConstructor
 public class RoleController {
 
-    private final RoleService roleService;
+    @Autowired
+    private RoleService roleService;
 
     @PostMapping("/create")
     @Operation(summary = "Create new role")

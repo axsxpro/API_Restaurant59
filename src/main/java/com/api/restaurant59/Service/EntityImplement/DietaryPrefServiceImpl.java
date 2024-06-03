@@ -7,6 +7,11 @@ import com.api.restaurant59.Model.Entity.DietaryPreference;
 import com.api.restaurant59.Model.Repository.DietaryPrefRepository;
 import com.api.restaurant59.Service.EntityService.DietaryPreferenceService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +23,7 @@ import java.util.stream.Collectors;
 public class DietaryPrefServiceImpl implements DietaryPreferenceService {
 
 
+    @Autowired
     private DietaryPrefRepository dietaryPreferenceRepository;
 
 
@@ -46,6 +52,19 @@ public class DietaryPrefServiceImpl implements DietaryPreferenceService {
         return dietaryPreferences.stream().map(DietaryPreferenceMapper::mapToDietaryPreferenceDTO).collect(Collectors.toList());
     }
 
+
+    //pagination
+    @Override
+    public Page<DietaryPreferenceDTO> readAll(int page, int size) {
+
+        // Crée un objet Pageable avec le numéro de page, la taille de la page, et le tri par ID croissant.
+        Pageable pageable = PageRequest.of(page, size, Sort.by("idDietaryPreference").ascending());
+        // Utilise le repository pour trouver toutes les entités DietaryPreference en fonction de l'objet Pageable.
+        Page<DietaryPreference> dietaryPreferencePage = dietaryPreferenceRepository.findAll(pageable);
+
+        // Mappe chaque entité DietaryPreference de la page à un DietaryPreferenceDTO en utilisant le mapper spécifié.
+        return dietaryPreferencePage.map(DietaryPreferenceMapper::mapToDietaryPreferenceDTO);
+    }
 
 
     @Override

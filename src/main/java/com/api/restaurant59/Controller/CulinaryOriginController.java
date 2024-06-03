@@ -4,6 +4,8 @@ import com.api.restaurant59.DTO.CulinaryOriginDTO;
 import com.api.restaurant59.Service.EntityService.CulinaryOriginService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CulinaryOriginController {
 
-
+    @Autowired
     private CulinaryOriginService culinaryOriginService;
 
 
@@ -39,6 +41,17 @@ public class CulinaryOriginController {
 
         List<CulinaryOriginDTO> culinaryOrigins = culinaryOriginService.readAll();
         // Retourne une réponse HTTP statut 200 (OK).
+        return ResponseEntity.ok(culinaryOrigins);
+    }
+
+
+    // Récupérer toutes les données d'une entité CulinaryOrigin par pagination
+    @GetMapping("/pagination")
+    @Operation(summary = "Get All culinary origins with pagination")
+    public ResponseEntity<Page<CulinaryOriginDTO>> getAllCulinaryOriginsWithPagination(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+
+        Page<CulinaryOriginDTO> culinaryOrigins = culinaryOriginService.readAll(page, size);
+
         return ResponseEntity.ok(culinaryOrigins);
     }
 
@@ -74,5 +87,6 @@ public class CulinaryOriginController {
         // Retourne une réponse HTTP avec un statut 204 (NO CONTENT) indiquant que la suppression a réussi
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 }
 

@@ -7,6 +7,11 @@ import com.api.restaurant59.Model.Entity.MichelinCategory;
 import com.api.restaurant59.Model.Repository.MichelinCategoryRepository;
 import com.api.restaurant59.Service.EntityService.MichelinCategoryService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +23,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class MichelinCategoryServiceImpl implements MichelinCategoryService {
 
-
+    @Autowired
     private MichelinCategoryRepository michelinCategoryRepository;
 
 
@@ -41,6 +46,20 @@ public class MichelinCategoryServiceImpl implements MichelinCategoryService {
         List<MichelinCategory> michelinCategories = michelinCategoryRepository.findAll();
         // Mappe chaque entité en DTO et retourne la liste des DTO
         return michelinCategories.stream().map(MichelinCategoryMapper::mapToMichelinCategoryDTO).collect(Collectors.toList());
+    }
+
+
+    //pagination
+    @Override
+    public Page<MichelinCategoryDTO> readAll(int page, int size) {
+
+        // Crée un objet Pageable avec le numéro de page, la taille de la page, et le tri par ID croissant.
+        Pageable pageable = PageRequest.of(page, size, Sort.by("idMichelinCategory").ascending());
+        // Utilise le repository pour trouver toutes les entités MichelinCategory en fonction de l'objet Pageable.
+        Page<MichelinCategory> michelinCategoryPage = michelinCategoryRepository.findAll(pageable);
+
+        // Mappe chaque entité MichelinCategory de la page à un MichelinCategoryDTO en utilisant le mapper spécifié.
+        return michelinCategoryPage.map(MichelinCategoryMapper::mapToMichelinCategoryDTO);
     }
 
 

@@ -4,6 +4,8 @@ import com.api.restaurant59.DTO.RestaurantTypeDTO;
 import com.api.restaurant59.Service.EntityService.RestaurantTypeService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +18,9 @@ import java.util.List;
 public class RestaurantTypeController {
 
 
+    @Autowired
     private RestaurantTypeService restaurantTypeService;
+
 
     // Créer une nouvelle instance d'une entité RestaurantType
     @PostMapping("/create")
@@ -28,6 +32,7 @@ public class RestaurantTypeController {
         return new ResponseEntity<>(createdRestaurantType, HttpStatus.CREATED);
     }
 
+
     // Récupérer toutes les données d'une entité RestaurantType
     @GetMapping
     @Operation(summary = "Get all restaurants types ")
@@ -36,6 +41,18 @@ public class RestaurantTypeController {
         // Retourne une réponse HTTP statut 200 (OK)
         return ResponseEntity.ok(restaurantTypes);
     }
+
+
+    //Récupérer toutes les données d'une entité RestaurantType avec pagination
+    @GetMapping("/pagination")
+    @Operation(summary = "Get All restaurant types with pagination")
+    public ResponseEntity<Page<RestaurantTypeDTO>> getAllRestaurantTypesWithPagination(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+
+        Page<RestaurantTypeDTO> restaurantTypes = restaurantTypeService.readAll(page, size);
+
+        return ResponseEntity.ok(restaurantTypes);
+    }
+
 
     // Récupérer une RestaurantType par son identifiant
     @GetMapping("/{id}")
@@ -46,6 +63,7 @@ public class RestaurantTypeController {
         return new ResponseEntity<>(restaurantType, HttpStatus.OK);
     }
 
+
     // Mettre à jour une RestaurantType par son identifiant
     @PutMapping("/update/{id}")
     @Operation(summary = "Update restaurant type by ID ")
@@ -54,6 +72,7 @@ public class RestaurantTypeController {
         // Retourne une réponse HTTP avec le DTO de la RestaurantType mise à jour et un statut 202 (ACCEPTED)
         return new ResponseEntity<>(updatedRestaurantType, HttpStatus.ACCEPTED);
     }
+
 
     // Supprimer une RestaurantType par son identifiant
     @DeleteMapping("/delete/{id}")

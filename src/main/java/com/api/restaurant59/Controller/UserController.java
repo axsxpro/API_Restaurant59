@@ -3,6 +3,8 @@ package com.api.restaurant59.Controller;
 import com.api.restaurant59.DTO.UserDTO;
 import com.api.restaurant59.Service.EntityService.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,7 +18,9 @@ import java.util.List;
 @AllArgsConstructor
 public class UserController {
 
+    @Autowired
     private UserService userService;
+
 
     @PostMapping("/create")
     @Operation(summary = "Create new user")
@@ -24,6 +28,7 @@ public class UserController {
         UserDTO createdUser = userService.create(userDto);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
+
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -33,6 +38,17 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+
+    @GetMapping("/pagination")
+    @Operation(summary = "Get All users with pagination")
+    public ResponseEntity<Page<UserDTO>> getAllUsersWithPagination(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+
+        Page<UserDTO> users = userService.readAll(page, size);
+
+        return ResponseEntity.ok(users);
+    }
+
+
     @GetMapping("/{id}")
     @Operation(summary = "Get user by ID")
     public ResponseEntity<UserDTO> getUserById(@PathVariable("id") Integer idUser) {
@@ -40,12 +56,14 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+
     @PutMapping("/update/{id}")
     @Operation(summary = "Update user by ID")
     public ResponseEntity<UserDTO> updateUser(@PathVariable("id") Integer idUser, @RequestBody UserDTO userDto) {
         UserDTO updatedUser = userService.update(idUser, userDto);
         return new ResponseEntity<>(updatedUser, HttpStatus.ACCEPTED);
     }
+
 
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "Delete user by ID")

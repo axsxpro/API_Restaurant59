@@ -4,6 +4,8 @@ import com.api.restaurant59.DTO.RestaurantDTO;
 import com.api.restaurant59.Service.EntityService.RestaurantService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +18,9 @@ import java.util.List;
 public class RestaurantController {
 
 
+    @Autowired
     private RestaurantService restaurantService;
+
 
     // Créer une nouvelle instance d'une entité Restaurant
     @PostMapping("/create")
@@ -35,6 +39,23 @@ public class RestaurantController {
     public ResponseEntity<List<RestaurantDTO>> getAllRestaurants() {
         List<RestaurantDTO> restaurants = restaurantService.readAll();
         // Retourne une réponse HTTP statut 200 (OK)
+        return ResponseEntity.ok(restaurants);
+    }
+
+
+    // récupérer restaurant avec pagination
+    @GetMapping("/pagination")
+    @Operation(summary = "Get All restaurants with pagination")
+    public ResponseEntity<Page<RestaurantDTO>> getAllRestaurantsWithPagination(
+            // Définit un paramètre de requête "page" avec une valeur par défaut de 0 (1ère page).
+            @RequestParam(defaultValue = "0") int page,
+            // Définit un paramètre de requête "size" avec une valeur par défaut de 3 (3 élements par page).
+            @RequestParam(defaultValue = "3") int size) {
+
+        // Appelle le service pour récupérer les restaurants avec pagination en utilisant les paramètres de page et de taille.
+        Page<RestaurantDTO> restaurants = restaurantService.readAll(page, size);
+
+        // Retourne une réponse HTTP 200 (OK) contenant la page de restaurants.
         return ResponseEntity.ok(restaurants);
     }
 
@@ -67,6 +88,7 @@ public class RestaurantController {
         // Retourne une réponse HTTP avec un statut 204 (NO CONTENT) indiquant que la suppression a réussi
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 
 }
 

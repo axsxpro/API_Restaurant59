@@ -4,6 +4,8 @@ import com.api.restaurant59.DTO.CulinarySpecialityDTO;
 import com.api.restaurant59.Service.EntityService.CulinarySpecialityService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ import java.util.List;
 public class CulinarySpecialityController {
 
 
+    @Autowired
     private CulinarySpecialityService culinarySpecialityService;
 
 
@@ -31,7 +34,6 @@ public class CulinarySpecialityController {
     }
 
 
-
     // Récupérer toutes les données d'une entité CulinarySpeciality
     @GetMapping
     @Operation(summary = "Get all culinary speciality")
@@ -42,6 +44,16 @@ public class CulinarySpecialityController {
         return ResponseEntity.ok(culinarySpecialities);
     }
 
+
+    // Récupérer toutes les données d'une entité CulinarySpeciality par pagination
+    @GetMapping("/pagination")
+    @Operation(summary = "Get All culinary specialities with pagination")
+    public ResponseEntity<Page<CulinarySpecialityDTO>> getAllCulinarySpecialitiesWithPagination(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+
+        Page<CulinarySpecialityDTO> culinarySpecialities = culinarySpecialityService.readAll(page, size);
+
+        return ResponseEntity.ok(culinarySpecialities);
+    }
 
 
     // Récupérer une CulinarySpeciality par son identifiant

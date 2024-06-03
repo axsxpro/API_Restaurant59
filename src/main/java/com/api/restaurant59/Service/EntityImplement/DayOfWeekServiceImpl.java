@@ -7,6 +7,11 @@ import com.api.restaurant59.Model.Entity.DayOfWeek;
 import com.api.restaurant59.Model.Repository.DayOfWeekRepository;
 import com.api.restaurant59.Service.EntityService.DayOfWeekService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +22,11 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class DayOfWeekServiceImpl implements DayOfWeekService {
 
+
+    @Autowired
     private DayOfWeekRepository dayOfWeekRepository;
+
+
 
     // HTTP POST
     @Override
@@ -42,6 +51,20 @@ public class DayOfWeekServiceImpl implements DayOfWeekService {
         List<DayOfWeek> dayOfWeeks = dayOfWeekRepository.findAll();
         // Mappe chaque entité en DTO et retourne la liste des DTO
         return dayOfWeeks.stream().map(DayOfWeekMapper::mapToDayOfWeekDTO).collect(Collectors.toList());
+    }
+
+
+    //get dayOfWeek avec pagination
+    @Override
+    public Page<DayOfWeekDTO> readAll(int page, int size) {
+
+        // Crée un objet Pageable avec le numéro de page, la taille de la page, et le tri par ID croissant.
+        Pageable pageable = PageRequest.of(page, size, Sort.by("idDay").ascending());
+        // Utilise le repository pour trouver toutes les entités DayOfWeek en fonction de l'objet Pageable.
+        Page<DayOfWeek> dayOfWeekPage = dayOfWeekRepository.findAll(pageable);
+
+        // Mappe chaque entité DayOfWeek de la page à un DayOfWeekDTO en utilisant le mapper spécifié.
+        return dayOfWeekPage.map(DayOfWeekMapper::mapToDayOfWeekDTO);
     }
 
 

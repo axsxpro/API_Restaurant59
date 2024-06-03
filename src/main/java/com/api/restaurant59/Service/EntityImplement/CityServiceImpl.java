@@ -7,6 +7,11 @@ import com.api.restaurant59.Model.Entity.City;
 import com.api.restaurant59.Model.Repository.CityRepository;
 import com.api.restaurant59.Service.EntityService.CityService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +24,7 @@ import java.util.stream.Collectors;
 public class CityServiceImpl implements CityService {
 
 
+    @Autowired
     private CityRepository cityRepository;
 
 
@@ -37,7 +43,6 @@ public class CityServiceImpl implements CityService {
     }
 
 
-
     @Override
     public List<CityDTO> readAll() {
 
@@ -48,6 +53,19 @@ public class CityServiceImpl implements CityService {
         return cities.stream().map(CityMapper::mapToCityDTO).collect(Collectors.toList());
     }
 
+
+    //get cities avec pagination
+    @Override
+    public Page<CityDTO> readAll(int page, int size) {
+
+        // Crée un objet Pageable avec le numéro de page, la taille de la page, et le tri par ID croissant.
+        Pageable pageable = PageRequest.of(page, size, Sort.by("idCity").ascending());
+        // Utilise le repository pour trouver toutes les entités City en fonction de l'objet Pageable.
+        Page<City> cityPage = cityRepository.findAll(pageable);
+
+        // Mappe chaque entité City de la page à un CityDTO en utilisant le mapper spécifié.
+        return cityPage.map(CityMapper::mapToCityDTO);
+    }
 
 
     @Override

@@ -4,6 +4,8 @@ import com.api.restaurant59.DTO.DietaryPreferenceDTO;
 import com.api.restaurant59.Service.EntityService.DietaryPreferenceService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class DietaryPreferenceController {
 
-
+    @Autowired
     private DietaryPreferenceService dietaryPreferenceService;
 
 
@@ -38,6 +40,17 @@ public class DietaryPreferenceController {
 
         List<DietaryPreferenceDTO> dietaryPreferences = dietaryPreferenceService.readAll();
         // Retourne une réponse HTTP statut 200 (OK)
+        return ResponseEntity.ok(dietaryPreferences);
+    }
+
+
+    // Récupérer toutes les données de la table DietaryPreference par pagination
+    @GetMapping("/pagination")
+    @Operation(summary = "Get All dietary preferences with pagination")
+    public ResponseEntity<Page<DietaryPreferenceDTO>> getAllDietaryPreferencesWithPagination(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+
+        Page<DietaryPreferenceDTO> dietaryPreferences = dietaryPreferenceService.readAll(page, size);
+
         return ResponseEntity.ok(dietaryPreferences);
     }
 

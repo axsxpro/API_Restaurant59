@@ -6,7 +6,6 @@ import com.api.restaurant59.DTO.ScheduleDTO;
 import com.api.restaurant59.Exception.ResourceNotFoundException;
 import com.api.restaurant59.Mapper.AvailabilityMapper;
 import com.api.restaurant59.Model.Entity.Availability;
-
 import com.api.restaurant59.Model.Entity.DayOfWeek;
 import com.api.restaurant59.Model.Entity.Schedule;
 import com.api.restaurant59.Model.Repository.AvailabilityRepository;
@@ -15,6 +14,10 @@ import com.api.restaurant59.Model.Repository.ScheduleRepository;
 import com.api.restaurant59.Service.EntityService.AvailabilityService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -27,6 +30,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AvailabilityServiceImpl implements AvailabilityService {
 
+    @Autowired
     private AvailabilityRepository availabilityRepository;
     private DayOfWeekRepository dayOfWeekRepository;
     private ScheduleRepository scheduleRepository;
@@ -88,10 +92,24 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
 
     @Override
+    public Page<AvailabilityDTO> readAll(int page, int size) {
+
+        // Crée un objet Pageable avec le numéro de page et la taille de la page spécifiés.
+        Pageable pageable = PageRequest.of(page, size);
+        // Utilise le repository pour trouver toutes les entités Availability en fonction de l'objet Pageable.
+        Page<Availability> availabilityPage = availabilityRepository.findAll(pageable);
+        // Mappe chaque entité Availability de la page à un AvailabilityDTO en utilisant le mapper spécifié.
+        return availabilityPage.map(AvailabilityMapper::mapToAvailabilityDTO);
+    }
+
+
+    @Override
     public AvailabilityDTO getById(Integer id) {
+
         // Cherche une entité Availability par son identifiant dans le repository
         Optional<Availability> optionalAvailability = availabilityRepository.findById(id);
         // Si une entité Availability est trouvée, la convertit en DTO
+
         // Sinon, lance une exception ResourceNotFoundException
         return optionalAvailability.map(AvailabilityMapper::mapToAvailabilityDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("Availability not found with id: " + id));

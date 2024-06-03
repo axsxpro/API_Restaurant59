@@ -4,6 +4,7 @@ import com.api.restaurant59.DTO.DayOfWeekDTO;
 import com.api.restaurant59.Service.EntityService.DayOfWeekService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.util.List;
 public class DayOfWeekController {
 
 
+    @Autowired
     private DayOfWeekService dayOfWeekService;
 
 

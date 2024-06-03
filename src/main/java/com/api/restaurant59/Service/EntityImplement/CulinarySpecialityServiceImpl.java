@@ -7,6 +7,10 @@ import com.api.restaurant59.Model.Entity.CulinarySpeciality;
 import com.api.restaurant59.Model.Repository.CulinarySpecialityRepository;
 import com.api.restaurant59.Service.EntityService.CulinarySpecialityService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,6 +44,20 @@ public class CulinarySpecialityServiceImpl implements CulinarySpecialityService 
         List<CulinarySpeciality> culinarySpecialities = culinarySpecialityRepository.findAll();
         // Mappe chaque entité en DTO et retourne la liste des DTO
         return culinarySpecialities.stream().map(CulinarySpecialityMapper::mapToCulinarySpecialityDTO).collect(Collectors.toList());
+    }
+
+
+    //get culinary speciality avec pagination
+    @Override
+    public Page<CulinarySpecialityDTO> readAll(int page, int size) {
+
+        // Crée un objet Pageable avec le numéro de page, la taille de la page, et le tri par ID croissant.
+        Pageable pageable = PageRequest.of(page, size, Sort.by("idSpeciality").ascending());
+        // Utilise le repository pour trouver toutes les entités CulinarySpeciality en fonction de l'objet Pageable.
+        Page<CulinarySpeciality> culinarySpecialityPage = culinarySpecialityRepository.findAll(pageable);
+
+        // Mappe chaque entité CulinarySpeciality de la page à un CulinarySpecialityDTO en utilisant le mapper spécifié.
+        return culinarySpecialityPage.map(CulinarySpecialityMapper::mapToCulinarySpecialityDTO);
     }
 
 

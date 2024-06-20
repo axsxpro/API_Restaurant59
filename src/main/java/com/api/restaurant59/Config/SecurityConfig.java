@@ -40,11 +40,14 @@ public class SecurityConfig {
         auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder());
     }
 
+    
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
 
+
+    //configure la chaîne de filtres de sécurité pour l'application
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -61,10 +64,14 @@ public class SecurityConfig {
         return http.build(); // Construit la chaîne de filtres de sécurité.
     }
 
+
+    // La méthode corsConfigurationSource configure les paramètres de Cross-Origin Resource Sharing (CORS) pour l'application.
+    // CORS est un mécanisme qui permet aux ressources d'une application web d'être demandées par des pages web provenant d'un domaine différent.
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // CORS(Cross-Origin Resource Sharing): autorise l'échange de ressources ayant des domaines différents.
+
+        CorsConfiguration configuration = new CorsConfiguration(); //// Crée une nouvelle configuration CORS.
+        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // CORS (Cross-Origin Resource Sharing) : autorise l'échange de ressources ayant des domaines différents.
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Méthodes HTTP autorisées.
         configuration.setAllowedHeaders(List.of("*")); // Autorise tous les headers.
         configuration.setAllowCredentials(true); // Permet l'envoi des cookies d'authentification.

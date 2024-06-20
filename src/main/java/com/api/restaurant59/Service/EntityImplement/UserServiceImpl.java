@@ -60,6 +60,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    //get all users sans pagination
     @Override
     public List<UserDTO> readAll() {
         // Récupère toutes les entités User du repository et les mappe en DTO

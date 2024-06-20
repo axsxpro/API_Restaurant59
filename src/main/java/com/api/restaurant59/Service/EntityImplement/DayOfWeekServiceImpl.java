@@ -27,7 +27,6 @@ public class DayOfWeekServiceImpl implements DayOfWeekService {
     private DayOfWeekRepository dayOfWeekRepository;
 
 
-
     // HTTP POST
     @Override
     public DayOfWeekDTO create(DayOfWeekDTO dayOfWeekDto) {

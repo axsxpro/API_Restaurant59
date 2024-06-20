@@ -17,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ScheduleController {
 
+
     @Autowired
     private ScheduleService scheduleService;
 
@@ -50,7 +51,6 @@ public class ScheduleController {
 
         return ResponseEntity.ok(schedules);
     }
-
 
 
     // Récupérer une Schedule par son identifiant
